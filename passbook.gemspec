@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["thomas@lauro.fr"]
   gem.description   = %q{Passbook gem let's you create pkpass for passbook iOS 6}
   gem.summary       = %q{Passbook gem let's you create pkpass for passbook iOS 6}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/frozon/passbook"
 
   # gem.files         = `git ls-files`.split($\)
   gem.files         = Dir.glob('{app,config,lib}/**/*') + %w(Gemfile LICENSE README.md Rakefile)
