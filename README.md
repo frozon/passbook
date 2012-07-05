@@ -4,17 +4,7 @@ Passbook gem let's you create pkpass for passbook iOS 6
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'passbook'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install passbook
+TODO : push the gel to rubygems.org
 
 ## Configuration
 
