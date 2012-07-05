@@ -22,7 +22,7 @@ Please refer to apple iOS dev center for how to build cert and json
     pass = Passbook::PKPass.new 'your json data'
     pass.addFile 'Path to your file'
     pkpass_path = pass.create
-    send_file path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
+    send_file pkpass_path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 
 ## Contributing
 
