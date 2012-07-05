@@ -30,7 +30,6 @@ module Passbook
 
       def createManifest
         sha1s = {}
-        puts "JSON : #{@json}"
         sha1s['pass.json'] = Digest::SHA1.hexdigest @json
 
         @files.each do |file|
