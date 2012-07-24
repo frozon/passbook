@@ -11,8 +11,12 @@ module Passbook
       @files     = []
     end
 
-    def addFile file_path
-      @files << file_path
+    def addFile file
+      @files << file
+    end
+
+    def addFiles files
+      @files += files
     end
 
     def json= json
