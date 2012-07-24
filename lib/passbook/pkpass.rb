@@ -1,5 +1,5 @@
 require 'digest/sha1'
-require 'OpenSSL'
+require 'openssl'
 require 'zip/zip'
 require 'base64'
 
@@ -25,12 +25,27 @@ module Passbook
 
     def create
       manifest = self.createManifest
-      signature = self.createSignature manifest
 
+      # Check pass for necessary files and fields
+      self.checkPass manifest
+
+      signature = self.createSignature manifest
       return self.createZip(manifest, signature)
     end
 
     protected
+
+      def checkPass manifest
+        # Check for default images
+        raise 'Icon missing' unless manifest.include?('icon.png')
+        raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
+        raise 'Logo missing' unless manifest.include?('logo.png')
+        raise 'Logo@2x missing' unless manifest.include?('logo@2x.png')
+
+        # Check for developer field in JSON
+        raise 'Pass Type Identifier missing' unless @json.include?('passTypeIdentifier')
+        raise 'Team Identifier missing' unless @json.include?('teamIdentifier')
+      end
 
       def createManifest
         sha1s = {}
