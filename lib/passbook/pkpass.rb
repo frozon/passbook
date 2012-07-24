@@ -37,7 +37,11 @@ module Passbook
         sha1s['pass.json'] = Digest::SHA1.hexdigest @json
 
         @files.each do |file|
-          sha1s[File.basename(file)] = Digest::SHA1.file(file).hexdigest
+          if file.class == Hash
+            sha1s[file[:name]] = Digest::SHA1.hexdigest file[:content]
+          else
+            sha1s[File.basename(file)] = Digest::SHA1.file(file).hexdigest
+          end
         end
 
         return sha1s.to_json
@@ -68,8 +72,13 @@ module Passbook
           z.print signature
 
           @files.each do |file|
-            z.put_next_entry File.basename(file)
-            z.print IO.read(file)
+            if file.class == Hash
+              z.put_next_entry file[:name]
+              z.print file[:content]
+            else
+              z.put_next_entry File.basename(file)
+              z.print IO.read(file)
+            end
           end
         end
         path = t.path
