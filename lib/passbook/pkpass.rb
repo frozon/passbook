@@ -45,6 +45,10 @@ module Passbook
         # Check for developer field in JSON
         raise 'Pass Type Identifier missing' unless @json.include?('passTypeIdentifier')
         raise 'Team Identifier missing' unless @json.include?('teamIdentifier')
+        raise 'Serial Number missing' unless @json.include?('serialNumber')
+        raise 'Organization Name Identifier missing' unless @json.include?('organizationName')
+        raise 'Format Version' unless @json.include?('formatVersion')
+        raise 'Description' unless @json.include?('description')
       end
 
       def createManifest
