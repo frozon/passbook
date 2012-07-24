@@ -9,21 +9,35 @@ TODO : push the gem to rubygems.org
 ## Configuration
 
 Configure it with config/initializers/passbook.rb
-
+```
     Passbook.configure do |passbook|
       passbook.p12_cert = Rails.root.join("cert.p12")
       passbook.p12_password = 'cert password'
     end
-
+```
 ## Usage
 
 Please refer to apple iOS dev center for how to build cert and json
-
+```
     pass = Passbook::PKPass.new 'your json data'
-    pass.addFile 'Path to your file'
+
+    # Add file from disk
+    pass.addFile 'file_path'
+
+    # Add file from memory
+    file[:name] = 'file name'
+    file[:content] = 'whatever you want'
+    pass.addFile file
+
+    # Add multiple files
+    pass.addFiles [file_path_1, file_path_2, file_path_3]
+
+    # Add multiple files from memory
+    pass.addFiles [{name: 'file1', content: 'content1'}, {name: 'file2', content: 'content2'}, {name: 'file3', content: 'content3'}]
+
     pkpass_path = pass.create
     send_file pkpass_path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
-
+```
 ## Contributing
 
 1. Fork it
