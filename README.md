@@ -8,7 +8,12 @@ TODO : push the gem to rubygems.org
 
 ## Configuration
 
-Configure it with config/initializers/passbook.rb
+Create initializer
+```
+    rails g passbook:config
+```
+
+Configure your config/initializers/passbook.rb
 ```
     Passbook.configure do |passbook|
       passbook.p12_cert = Rails.root.join("cert.p12")
