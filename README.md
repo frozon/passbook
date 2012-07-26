@@ -11,6 +11,8 @@ TODO : push the gem to rubygems.org
 Create initializer
 ```
     rails g passbook:config
+    or with params
+    rails g passbook:config [Absolute path to your cert.p12 file] [Password for your certificate]
 ```
 
 Configure your config/initializers/passbook.rb
