@@ -18,7 +18,8 @@ Create initializer
 Configure your config/initializers/passbook.rb
 ```
     Passbook.configure do |passbook|
-      passbook.p12_cert = Rails.root.join("cert.p12")
+      passbook.wwdc_cert = Rails.root.joint('wwdc_cert.pem')
+      passbook.p12_cert = Rails.root.join('cert.p12')
       passbook.p12_password = 'cert password'
     end
 ```
