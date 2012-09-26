@@ -68,7 +68,8 @@ module Passbook
 
       def createSignature manifest
         p12   = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        pk7   = OpenSSL::PKCS7.sign p12.certificate, p12.key, manifest.to_s, [], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
+        wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
+        pk7   = OpenSSL::PKCS7.sign p12.certificate, p12.key, manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
         data  = OpenSSL::PKCS7.write_smime pk7
 
         str_debut = "filename=\"smime.p7s\"\n\n"
