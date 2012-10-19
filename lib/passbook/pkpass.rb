@@ -23,14 +23,20 @@ module Passbook
       @json = json
     end
 
-    def create
+    def create(options={})
+      options[:as_file] ||= false
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
       self.checkPass manifest
 
       signature = self.createSignature manifest
-      return self.createZip(manifest, signature)
+
+      if options[:as_file]
+        return self.outputZip(manifest, signature)
+      else
+        return self.createZip(manifest, signature)
+      end
     end
 
     protected
@@ -83,28 +89,36 @@ module Passbook
       def createZip manifest, signature
         t = Tempfile.new("pass.pkpass")
 
-        Zip::ZipOutputStream.open(t.path) do |z|
-          z.put_next_entry 'pass.json'
-          z.print @json
-          z.put_next_entry 'manifest.json'
-          z.print manifest
-          z.put_next_entry 'signature'
-          z.print signature
-
-          @files.each do |file|
-            if file.class == Hash
-              z.put_next_entry file[:name]
-              z.print file[:content]
-            else
-              z.put_next_entry File.basename(file)
-              z.print IO.read(file)
-            end
-          end
-        end
+        outputZip(manifest, signature, t.path)
         path = t.path
 
         t.close
         return path
+      end
+
+      def outputZip manifest, signature, file_path
+
+         zip = Zip::ZipOutputStream.new(file_path)
+          zip.put_next_entry 'pass.json'
+          zip.print @json
+          zip.put_next_entry 'manifest.json'
+          zip.print manifest
+          zip.put_next_entry 'signature'
+          zip.print signature
+
+          @files.each do |file|
+            if file.class == Hash
+              zip.put_next_entry file[:name]
+              zip.print file[:content]
+            else
+              zip.put_next_entry File.basename(file)
+              zip.print IO.read(file)
+            end
+          end
+        end
+
+        zip.close
+        return zip
       end
   end
 end
