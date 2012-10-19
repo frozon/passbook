@@ -35,7 +35,7 @@ module Passbook
       if options[:as_file]
         return self.createZip(manifest, signature)
       else
-        return self.outputZip(manifest, signature, "pass.pkpass")
+        return self.outputZip(manifest, signature)
       end
     end
 
@@ -89,16 +89,16 @@ module Passbook
       def createZip manifest, signature
         t = Tempfile.new("pass.pkpass")
 
-        outputZip(manifest, signature, t.path)
+        t.write outputZip(manifest, signature)
         path = t.path
 
         t.close
         return path
       end
 
-      def outputZip manifest, signature, file_path
+      def outputZip manifest, signature
 
-         zip = Zip::ZipOutputStream.new(file_path)
+        zip_output = Zip::ZipOutputStream::write_buffer do |zip|
           zip.put_next_entry 'pass.json'
           zip.print @json
           zip.put_next_entry 'manifest.json'
@@ -116,8 +116,6 @@ module Passbook
             end
           end
         end
-
-        zip.close
         return zip
       end
   end
