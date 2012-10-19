@@ -35,7 +35,7 @@ module Passbook
       if options[:as_file]
         return self.createZip(manifest, signature)
       else
-        return self.outputZip(manifest, signature)
+        return self.outputZip(manifest, signature, "pass.pkpass")
       end
     end
 
