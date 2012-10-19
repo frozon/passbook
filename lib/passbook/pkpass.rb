@@ -24,7 +24,7 @@ module Passbook
     end
 
     def create(options={})
-      options[:as_file] ||= true
+      options[:as_file] ||= true # true to return a temp file, false to return the ZipOutputStream
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
