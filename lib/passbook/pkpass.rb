@@ -96,9 +96,9 @@ module Passbook
         return path
       end
 
-      def outputZip manifest, signature, filename
+      def outputZip manifest, signature, file_path
 
-         zip = Zip::ZipOutputStream.new(filename)
+         zip = Zip::ZipOutputStream.new(file_path)
           zip.put_next_entry 'pass.json'
           zip.print @json
           zip.put_next_entry 'manifest.json'
