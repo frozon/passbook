@@ -43,7 +43,7 @@ Please refer to apple iOS dev center for how to build cert and json
     # Add multiple files from memory
     pass.addFiles [{name: 'file1', content: 'content1'}, {name: 'file2', content: 'content2'}, {name: 'file3', content: 'content3'}]
 
-    pkpass_path = pass.create({ :as_file => true }) # as_file is optional. as_file: false (default) creates a tempfile and returns the file path, as_file: true directly returns a ZipOutputStream
+    pkpass_path = pass.create({ :as_file => true }) # as_file is optional. as_file: true (default) creates a tempfile and returns the file path, as_file: false directly returns a ZipOutputStream
     send_file pkpass_path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 ```
 ## Contributing

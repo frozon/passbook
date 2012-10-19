@@ -24,7 +24,7 @@ module Passbook
     end
 
     def create(options={})
-      options[:as_file] ||= false
+      options[:as_file] ||= true
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
@@ -33,9 +33,9 @@ module Passbook
       signature = self.createSignature manifest
 
       if options[:as_file]
-        return self.outputZip(manifest, signature)
-      else
         return self.createZip(manifest, signature)
+      else
+        return self.outputZip(manifest, signature)
       end
     end
 
