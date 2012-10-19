@@ -81,7 +81,7 @@ module Passbook
       end
 
       def createZip manifest, signature
-        t = Tempfile.new("pass.pkpass")
+        t = File.new("pass.pkpass")
 
         Zip::ZipOutputStream.open(t.path) do |z|
           z.put_next_entry 'pass.json'
