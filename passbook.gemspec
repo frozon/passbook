@@ -17,4 +17,6 @@ Gem::Specification.new do |gem|
   gem.version       = Passbook::VERSION
 
   gem.add_dependency 'rubyzip'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
 end

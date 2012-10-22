@@ -23,14 +23,20 @@ module Passbook
       @json = json
     end
 
-    def create
+    def create(options = {})
+      options[:in_memory] ||= false # false to return a temp file, true to return the ZipOutputStream
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
       self.checkPass manifest
 
       signature = self.createSignature manifest
-      return self.createZip(manifest, signature)
+
+      if options[:in_memory]
+        self.outputZip(manifest, signature)
+      else
+        self.createZip(manifest, signature)
+      end
     end
 
     protected
@@ -83,28 +89,35 @@ module Passbook
       def createZip manifest, signature
         t = Tempfile.new("pass.pkpass")
 
-        Zip::ZipOutputStream.open(t.path) do |z|
-          z.put_next_entry 'pass.json'
-          z.print @json
-          z.put_next_entry 'manifest.json'
-          z.print manifest
-          z.put_next_entry 'signature'
-          z.print signature
-
-          @files.each do |file|
-            if file.class == Hash
-              z.put_next_entry file[:name]
-              z.print file[:content]
-            else
-              z.put_next_entry File.basename(file)
-              z.print IO.read(file)
-            end
-          end
-        end
+        zip_out = outputZip(manifest, signature)
+        t.write zip_out.string
         path = t.path
 
         t.close
         return path
+      end
+
+      def outputZip manifest, signature
+
+        zip_output = Zip::ZipOutputStream.write_buffer do |zip|
+          zip.put_next_entry 'pass.json'
+          zip.write @json
+          zip.put_next_entry 'manifest.json'
+          zip.write manifest
+          zip.put_next_entry 'signature'
+          zip.write signature
+
+          @files.each do |file|
+            if file.class == Hash
+              zip.put_next_entry file[:name]
+              zip.print file[:content]
+            else
+              zip.put_next_entry File.basename(file)
+              zip.print IO.read(file)
+            end
+          end
+        end
+        return zip_output
       end
   end
 end
