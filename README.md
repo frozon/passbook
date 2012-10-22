@@ -49,7 +49,9 @@ Please refer to apple iOS dev center for how to build cert and json
 ## Tests
 
   To launch tests : 
+```
   bundle exec rspec spec/lib/passbook/pkpass_spec.rb
+```
 
 ## Contributing
 
