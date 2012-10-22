@@ -24,7 +24,9 @@ module Passbook
     end
 
     def create(options={})
-      options[:as_file] ||= true # true to return a temp file, false to return the ZipOutputStream
+      if options[:as_file].nil?
+        options[:as_file] ||= true # true to return a temp file, false to return the ZipOutputStream
+      end
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
@@ -89,7 +91,8 @@ module Passbook
       def createZip manifest, signature
         t = Tempfile.new("pass.pkpass")
 
-        t.write outputZip(manifest, signature)
+        zip_out = outputZip(manifest, signature)
+        t.write zip_out.string
         path = t.path
 
         t.close
@@ -98,13 +101,13 @@ module Passbook
 
       def outputZip manifest, signature
 
-        zip_output = Zip::ZipOutputStream::write_buffer do |zip|
+        zip_output = Zip::ZipOutputStream.write_buffer do |zip|
           zip.put_next_entry 'pass.json'
-          zip.print @json
+          zip.write @json
           zip.put_next_entry 'manifest.json'
-          zip.print manifest
+          zip.write manifest
           zip.put_next_entry 'signature'
-          zip.print signature
+          zip.write signature
 
           @files.each do |file|
             if file.class == Hash
@@ -116,7 +119,7 @@ module Passbook
             end
           end
         end
-        return zip
+        return zip_output
       end
   end
 end
