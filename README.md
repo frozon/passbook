@@ -46,6 +46,11 @@ Please refer to apple iOS dev center for how to build cert and json
     pkpass_path = pass.create({ :in_memory => true }) # in_memory is optional. in_memory: false (default) creates a tempfile and returns the file path, in_memory: true directly returns a ZipOutputStream
     send_file pkpass_path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 ```
+## Tests
+
+  To launch tests : 
+  bundle exec rspec spec/lib/passbook/pkpass_spec.rb
+
 ## Contributing
 
 1. Fork it
