@@ -24,9 +24,7 @@ module Passbook
     end
 
     def create(options={})
-      if options[:as_file].nil?
-        options[:as_file] ||= true # true to return a temp file, false to return the ZipOutputStream
-      end
+      options[:in_memory] ||= false # false to return a temp file, true to return the ZipOutputStream
       manifest = self.createManifest
 
       # Check pass for necessary files and fields
@@ -34,10 +32,10 @@ module Passbook
 
       signature = self.createSignature manifest
 
-      if options[:as_file]
-        return self.createZip(manifest, signature)
-      else
+      if options[:in_memory]
         return self.outputZip(manifest, signature)
+      else
+        return self.createZip(manifest, signature)
       end
     end
 

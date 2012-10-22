@@ -6,8 +6,8 @@ describe Passbook  do
 
   before :all do
     Passbook.configure do |pass|
-      pass.wwdc_cert = '../mobicheckin-server/lib/passbook/wwdr_certificate.cer'
-      pass.p12_cert = '../mobicheckin-server/lib/passbook/mobicheckin_passbook.p12'
+      pass.wwdc_cert = ENV['WWDC_PATH']
+      pass.p12_cert = ENV['P12_PATH']
       pass.p12_password = ENV['PASSBOOK_P12_PASSWORD']
     end
     @content = {
@@ -52,8 +52,8 @@ describe Passbook  do
     @pass = Passbook::PKPass.new @content.to_json
   end
   
-  it "should create correct zip" do
-    base_path = "../mobicheckin-server/app/assets/images/passbook"
+  it "should create a zip file by default" do
+    base_path = "spec/data"
     @pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
     entries = ["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]
     zip_path = @pass.create({})
@@ -64,5 +64,23 @@ describe Passbook  do
       end
     }
   end
+
+  it "should create a stringIO output if selected" do
+    base_path = "../mobicheckin-server/app/assets/images/passbook"
+    @pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
+    entries = ["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]
+    zip_out = @pass.create({ in_memory: true })
+    zip_out.class.should eq(Class::StringIO)
+    #creating file, re-reading zip to see if correctly formed
+    t = Tempfile.new("pass.pkpass")
+    t.write zip_out.string
+
+    Zip::ZipInputStream::open(t.path) {|io|
+      while (entry = io.get_next_entry)
+        entries.should include(entry.name)
+      end
+    }
+    t.close(unlink_now = true)
+  end 
 
 end
