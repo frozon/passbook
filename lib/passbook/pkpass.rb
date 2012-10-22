@@ -23,7 +23,7 @@ module Passbook
       @json = json
     end
 
-    def create(options={})
+    def create(options = {})
       options[:in_memory] ||= false # false to return a temp file, true to return the ZipOutputStream
       manifest = self.createManifest
 
@@ -33,9 +33,9 @@ module Passbook
       signature = self.createSignature manifest
 
       if options[:in_memory]
-        return self.outputZip(manifest, signature)
+        self.outputZip(manifest, signature)
       else
-        return self.createZip(manifest, signature)
+        self.createZip(manifest, signature)
       end
     end
 

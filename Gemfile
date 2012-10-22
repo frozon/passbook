@@ -5,5 +5,4 @@ gemspec
 
 group :test do
   gem "activesupport"
-  gem "ruby-debug19"
 end

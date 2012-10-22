@@ -12,7 +12,7 @@ describe Passbook  do
     end
     @content = {
                 formatVersion: 1,
-                passTypeIdentifier: "pass.mobicheckin.badge",
+                passTypeIdentifier: "pass.passbook.test",
                 serialNumber: "001",
                 teamIdentifier: ENV['APPLE_TEAM_ID'],
                 relevantDate: "2012-10-02",
@@ -66,7 +66,7 @@ describe Passbook  do
   end
 
   it "should create a stringIO output if selected" do
-    base_path = "../mobicheckin-server/app/assets/images/passbook"
+    base_path = "spec/data"
     @pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
     entries = ["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]
     zip_out = @pass.create({ in_memory: true })
