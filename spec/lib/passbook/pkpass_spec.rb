@@ -74,13 +74,13 @@ describe Passbook  do
     #creating file, re-reading zip to see if correctly formed
     t = Tempfile.new("pass.pkpass")
     t.write zip_out.string
-
+    t.close
     Zip::ZipInputStream::open(t.path) {|io|
       while (entry = io.get_next_entry)
         entries.should include(entry.name)
       end
     }
-    t.close(unlink_now = true)
+    t.delete
   end 
 
 end
