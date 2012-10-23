@@ -56,7 +56,7 @@ describe Passbook  do
     base_path = "spec/data"
     @pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
     entries = ["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]
-    zip_path = @pass.create
+    zip_path = @pass.file
     #re-reading zip to see if correctly formed
     Zip::ZipInputStream::open(zip_path) {|io|
       while (entry = io.get_next_entry)
@@ -69,7 +69,7 @@ describe Passbook  do
     base_path = "spec/data"
     @pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
     entries = ["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]
-    zip_out = @pass.create({ in_memory: true })
+    zip_out = @pass.stream
     zip_out.class.should eq(Class::StringIO)
     #creating file, re-reading zip to see if correctly formed
     t = Tempfile.new("pass.pkpass")

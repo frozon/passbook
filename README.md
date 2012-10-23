@@ -43,8 +43,16 @@ Please refer to apple iOS dev center for how to build cert and json
     # Add multiple files from memory
     pass.addFiles [{name: 'file1', content: 'content1'}, {name: 'file2', content: 'content2'}, {name: 'file3', content: 'content3'}]
 
-    pkpass_path = pass.create({ :in_memory => true }) # in_memory is optional. in_memory: false (default) creates a tempfile and returns the file path, in_memory: true directly returns a ZipOutputStream
-    send_file pkpass_path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
+    # Output a Tempfile
+
+    pkpass = pass.file
+    send_file pkpass.path, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
+
+    # Or a stream
+
+    pkpass = pass.stream
+    send_data pkpass.string, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
+
 ```
 ## Tests
 
@@ -60,3 +68,8 @@ Please refer to apple iOS dev center for how to build cert and json
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Changelog
+
+### 0.0.4
+Allow passbook gem to return a ZipOutputStream (needed when garbage collector delete tempfile before beeing able to use it) [Thx to applidget]
