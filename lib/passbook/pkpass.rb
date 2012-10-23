@@ -35,6 +35,11 @@ module Passbook
       return [manifest, signature]
     end
 
+    # Backward compatibility
+    def create
+      self.file.path
+    end
+
     # Return a Tempfile containing our ZipStream
     def file(options = {})
       options[:file_name] ||= 'pass.pkpass'
