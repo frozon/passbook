@@ -7,5 +7,6 @@ group :test, :development do
   gem 'activesupport'
   gem 'jeweler'
   gem 'simplecov'
+  gem 'rspec' 
   gem 'yard'
 end
