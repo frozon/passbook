@@ -4,14 +4,6 @@ require 'passbook'
 
 describe Passbook  do
 
-  before :all do
-    Passbook.configure do |pass|
-      pass.wwdc_cert = ENV['WWDC_PATH']
-      pass.p12_cert = ENV['P12_PATH']
-      pass.p12_password = ENV['PASSBOOK_P12_PASSWORD']
-    end
-  end
-
   let (:content) {{
     formatVersion: 1,
     passTypeIdentifier: "pass.passbook.test",
