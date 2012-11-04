@@ -1,6 +1,4 @@
-require 'passbook/pkpass'
-require 'json'
-require 'passbook'
+require 'spec_helper'
 
 describe Passbook  do
 

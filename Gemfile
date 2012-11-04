@@ -6,4 +6,6 @@ gemspec
 group :test, :development do
   gem 'activesupport'
   gem 'jeweler'
+  gem 'simplecov'
+  gem 'yard'
 end

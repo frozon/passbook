@@ -79,6 +79,6 @@ Allow passbook gem to return a ZipOutputStream (needed when garbage collector de
 License
 -------
 
-redir is released under the MIT license:
+passbook-ios is released under the MIT license:
 
 * http://www.opensource.org/licenses/MIT
