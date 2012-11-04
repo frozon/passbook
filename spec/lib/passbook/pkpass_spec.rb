@@ -3,40 +3,40 @@ require 'spec_helper'
 describe Passbook  do
 
   let (:content) {{
-    formatVersion: 1,
-    passTypeIdentifier: "pass.passbook.test",
-    serialNumber: "001",
-    teamIdentifier: ENV['APPLE_TEAM_ID'],
-    relevantDate: "2012-10-02",
-    locations: [  #TODO
+    :formatVersion => 1,
+    :passTypeIdentifier => "pass.passbook.test",
+    :serialNumber => "001",
+    :teamIdentifier => ENV['APPLE_TEAM_ID'],
+    :relevantDate => "2012-10-02",
+    :locations => [  #TODO
       {
-    longitude: 2.35403,
-    latitude: 48.893855
+    :longitude => 2.35403,
+    :latitude => 48.893855
   }
   ],
-    organizationName: "WorldCo",
-    description: "description",
-    foregroundColor: "rgb(227,210,18)",
-    backgroundColor: "rgb(60, 65, 76)",
-    logoText: "Event",
-    eventTicket: {
-    primaryFields: [
+    :organizationName => "WorldCo",
+    :description => "description",
+    :foregroundColor => "rgb(227,210,18)",
+    :backgroundColor => "rgb(60, 65, 76)",
+    :logoText => "Event",
+    :eventTicket => {
+    :primaryFields => [
       {
-    key: "date",
-    label: "DATE",
-    value: "date"
+    :key => "date",
+    :label => "DATE",
+    :value => "date"
   }
   ],
-    backFields: [
+    :backFields => [
       {
-    key: "description",
-    label: "DESCRIPTION",
-    value: "description"
+    :key => "description",
+    :label => "DESCRIPTION",
+    :value => "description"
   },
     {
-    key: "aboutUs",
-    label: "MORE",
-    value: "about us"
+    :key => "aboutUs",
+    :label => "MORE",
+    :value => "about us"
   }
   ]
   }
@@ -60,7 +60,7 @@ describe Passbook  do
     end
 
     context 'zip file' do
-      let(:zip_path) {pass.file}
+      let(:zip_path) {pass.file.path}
 
       subject {entries}
       it {should eq @file_entries}
@@ -68,7 +68,7 @@ describe Passbook  do
 
     context 'StringIO' do
       let (:temp_file) {Tempfile.new("pass.pkpass")}
-      let (:zip_path) {        
+      let (:zip_path) {
         zip_out = pass.stream
         zip_out.class.should eq(Class::StringIO)
         #creating file, re-reading zip to see if correctly formed

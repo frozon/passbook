@@ -24,13 +24,13 @@ module Passbook
     end
 
     def build
-      manifest = self.createManifest
+      manifest = createManifest
 
       # Check pass for necessary files and fields
-      self.checkPass manifest
+      checkPass manifest
 
       # Create pass signature
-      signature = self.createSignature manifest
+      signature = createSignature manifest
 
       return [manifest, signature]
     end
@@ -53,12 +53,12 @@ module Passbook
 
     # Return a ZipOutputStream
     def stream
-      manifest, signature = self.build
+      manifest, signature = build
 
-      self.outputZip manifest, signature
+      outputZip manifest, signature
     end
 
-    protected
+    private
 
       def checkPass manifest
         # Check for default images
