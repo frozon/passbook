@@ -20,4 +20,9 @@ module Rails
   end
 end
 
+module Passbook
+  def configure
+  end
+end
+
 Dir['lib/**/*.rb'].each {|f| require File.join(File.dirname(__FILE__), '..', f.gsub(/.rb/, ''))}
