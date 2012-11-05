@@ -8,6 +8,10 @@ platforms :jruby do
   gem 'jruby-openssl'
 end
 
+if defined?(JRUBY_VERSION)
+  gem 'jruby-openssl'
+end
+
 group :test, :development do
   gem 'activesupport'
   gem 'jeweler'
