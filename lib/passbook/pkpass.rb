@@ -58,84 +58,98 @@ module Passbook
       outputZip manifest, signature
     end
 
+    def get_p12_cert_and_key
+      key_hash = {}
+      if Passbook.p12_key
+        key_hash[:key] = OpenSSL::PKey::RSA.new File.read(Passbook.p12_key), Passbook.p12_password
+        key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
+      else
+        p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
+        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate 
+      end
+      key_hash 
+    end
+
+    def createSignature manifest
+      p12   = get_p12_cert_and_key
+      wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
+      pk7   = OpenSSL::PKCS7.sign p12[:cert], p12[:key], manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
+      data  = OpenSSL::PKCS7.write_smime pk7
+
+      str_debut = "filename=\"smime.p7s\"\n\n"
+      data = data[data.index(str_debut)+str_debut.length..data.length-1]
+      str_end = "\n\n------"
+      data = data[0..data.index(str_end)-1]
+
+      return Base64.decode64(data)
+    end
+
     private
 
-      def checkPass manifest
-        # Check for default images
-        raise 'Icon missing' unless manifest.include?('icon.png')
-        raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
-        raise 'Logo missing' unless manifest.include?('logo.png')
-        raise 'Logo@2x missing' unless manifest.include?('logo@2x.png')
+    def checkPass manifest
+      # Check for default images
+      raise 'Icon missing' unless manifest.include?('icon.png')
+      raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
+      raise 'Logo missing' unless manifest.include?('logo.png')
+      raise 'Logo@2x missing' unless manifest.include?('logo@2x.png')
 
-        # Check for developer field in JSON
-        raise 'Pass Type Identifier missing' unless @json.include?('passTypeIdentifier')
-        raise 'Team Identifier missing' unless @json.include?('teamIdentifier')
-        raise 'Serial Number missing' unless @json.include?('serialNumber')
-        raise 'Organization Name Identifier missing' unless @json.include?('organizationName')
-        raise 'Format Version' unless @json.include?('formatVersion')
-        raise 'Description' unless @json.include?('description')
+      # Check for developer field in JSON
+      raise 'Pass Type Identifier missing' unless @json.include?('passTypeIdentifier')
+      raise 'Team Identifier missing' unless @json.include?('teamIdentifier')
+      raise 'Serial Number missing' unless @json.include?('serialNumber')
+      raise 'Organization Name Identifier missing' unless @json.include?('organizationName')
+      raise 'Format Version' unless @json.include?('formatVersion')
+      raise 'Description' unless @json.include?('description')
+    end
+
+    def createManifest
+      sha1s = {}
+      sha1s['pass.json'] = Digest::SHA1.hexdigest @json
+
+      @files.each do |file|
+        if file.class == Hash
+          sha1s[file[:name]] = Digest::SHA1.hexdigest file[:content]
+        else
+          sha1s[File.basename(file)] = Digest::SHA1.file(file).hexdigest
+        end
       end
 
-      def createManifest
-        sha1s = {}
-        sha1s['pass.json'] = Digest::SHA1.hexdigest @json
+      return sha1s.to_json
+    end
+
+
+
+    def createZip manifest, signature
+      t = Tempfile.new("pass.pkpass")
+
+      zip_out = outputZip(manifest, signature)
+      t.write zip_out.string
+      path = t.path
+
+      t.close
+      return path
+    end
+
+    def outputZip manifest, signature
+
+      Zip::ZipOutputStream.write_buffer do |zip|
+        zip.put_next_entry 'pass.json'
+        zip.write @json
+        zip.put_next_entry 'manifest.json'
+        zip.write manifest
+        zip.put_next_entry 'signature'
+        zip.write signature
 
         @files.each do |file|
           if file.class == Hash
-            sha1s[file[:name]] = Digest::SHA1.hexdigest file[:content]
+            zip.put_next_entry file[:name]
+            zip.print file[:content]
           else
-            sha1s[File.basename(file)] = Digest::SHA1.file(file).hexdigest
-          end
-        end
-
-        return sha1s.to_json
-      end
-
-      def createSignature manifest
-        p12   = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
-        pk7   = OpenSSL::PKCS7.sign p12.certificate, p12.key, manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
-        data  = OpenSSL::PKCS7.write_smime pk7
-
-        str_debut = "filename=\"smime.p7s\"\n\n"
-        data = data[data.index(str_debut)+str_debut.length..data.length-1]
-        str_end = "\n\n------"
-        data = data[0..data.index(str_end)-1]
-
-        return Base64.decode64(data)
-      end
-
-      def createZip manifest, signature
-        t = Tempfile.new("pass.pkpass")
-
-        zip_out = outputZip(manifest, signature)
-        t.write zip_out.string
-        path = t.path
-
-        t.close
-        return path
-      end
-
-      def outputZip manifest, signature
-
-        Zip::ZipOutputStream.write_buffer do |zip|
-          zip.put_next_entry 'pass.json'
-          zip.write @json
-          zip.put_next_entry 'manifest.json'
-          zip.write manifest
-          zip.put_next_entry 'signature'
-          zip.write signature
-
-          @files.each do |file|
-            if file.class == Hash
-              zip.put_next_entry file[:name]
-              zip.print file[:content]
-            else
-              zip.put_next_entry File.basename(file)
-              zip.print IO.read(file)
-            end
+            zip.put_next_entry File.basename(file)
+            zip.print IO.read(file)
           end
         end
       end
+    end
   end
 end
