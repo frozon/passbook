@@ -5,6 +5,7 @@ require 'base64'
 
 module Passbook
   class PKPass
+    attr_accessor :json
 
     def initialize json
       @json      = json
@@ -17,10 +18,6 @@ module Passbook
 
     def addFiles files
       @files += files
-    end
-
-    def json= json
-      @json = json
     end
 
     def build

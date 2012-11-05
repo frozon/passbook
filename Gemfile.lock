@@ -1,9 +1,3 @@
-PATH
-  remote: .
-  specs:
-    passbook (0.0.4)
-      rubyzip
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -46,8 +40,9 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   jeweler
-  passbook!
+  jruby-openssl
   rake
   rspec
+  rubyzip
   simplecov
   yard
