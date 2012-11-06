@@ -5,11 +5,7 @@ source 'https://rubygems.org'
 gem 'rubyzip'
 
 platforms :jruby do
-  gem 'jruby-openssl'
-end
-
-if defined?(JRUBY_VERSION)
-  gem 'jruby-openssl'
+  gem 'jruby-openssl', '0.7.7'
 end
 
 group :test, :development do
