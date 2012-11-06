@@ -5,19 +5,24 @@ require 'base64'
 
 module Passbook
   class PKPass
-    attr_accessor :json
+    attr_accessor :pass, :manifest_files
 
-    def initialize json
-      @json      = json
-      @files     = []
+    def initialize pass
+      @pass      = pass
+      @manifest_files     = []
     end
 
     def addFile file
-      @files << file
+      @manifest_files << file
     end
 
     def addFiles files
-      @files += files
+      @manifest_files += files
+    end
+
+    # for backwards compatibility
+    def json= json
+      @pass = json
     end
 
     def build
@@ -91,19 +96,19 @@ module Passbook
       raise 'Logo@2x missing' unless manifest.include?('logo@2x.png')
 
       # Check for developer field in JSON
-      raise 'Pass Type Identifier missing' unless @json.include?('passTypeIdentifier')
-      raise 'Team Identifier missing' unless @json.include?('teamIdentifier')
-      raise 'Serial Number missing' unless @json.include?('serialNumber')
-      raise 'Organization Name Identifier missing' unless @json.include?('organizationName')
-      raise 'Format Version' unless @json.include?('formatVersion')
-      raise 'Description' unless @json.include?('description')
+      raise 'Pass Type Identifier missing' unless @pass.include?('passTypeIdentifier')
+      raise 'Team Identifier missing' unless @pass.include?('teamIdentifier')
+      raise 'Serial Number missing' unless @pass.include?('serialNumber')
+      raise 'Organization Name Identifier missing' unless @pass.include?('organizationName')
+      raise 'Format Version' unless @pass.include?('formatVersion')
+      raise 'Description' unless @pass.include?('description')
     end
 
     def createManifest
       sha1s = {}
-      sha1s['pass.json'] = Digest::SHA1.hexdigest @json
+      sha1s['pass.json'] = Digest::SHA1.hexdigest @pass
 
-      @files.each do |file|
+      @manifest_files.each do |file|
         if file.class == Hash
           sha1s[file[:name]] = Digest::SHA1.hexdigest file[:content]
         else
@@ -131,13 +136,13 @@ module Passbook
 
       Zip::ZipOutputStream.write_buffer do |zip|
         zip.put_next_entry 'pass.json'
-        zip.write @json
+        zip.write @pass
         zip.put_next_entry 'manifest.json'
         zip.write manifest
         zip.put_next_entry 'signature'
         zip.write signature
 
-        @files.each do |file|
+        @manifest_files.each do |file|
           if file.class == Hash
             zip.put_next_entry file[:name]
             zip.print file[:content]
