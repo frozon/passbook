@@ -119,19 +119,6 @@ module Passbook
       return sha1s.to_json
     end
 
-
-
-    def createZip manifest, signature
-      t = Tempfile.new("pass.pkpass")
-
-      zip_out = outputZip(manifest, signature)
-      t.write zip_out.string
-      path = t.path
-
-      t.close
-      return path
-    end
-
     def outputZip manifest, signature
 
       Zip::ZipOutputStream.write_buffer do |zip|
