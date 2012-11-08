@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MIT"
   gem.summary = %Q{A IOS Passbook generator.}
   gem.description = %Q{This gem allows you to create IOS Passbooks.  Unlike some,  this works with Rails but does not require it.}
-  gem.email = ['lgleason@polyglotprogramminginc.com', 'thomas@lauro.fr']
-  gem.authors = ['Lance Gleason', 'Thomas Lauro' ]
+  gem.email = ['thomas@lauro.fr', 'lgleason@polyglotprogramminginc.com']
+  gem.authors = ['Thomas Lauro', 'Lance Gleason']
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
