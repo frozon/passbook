@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/lgleasain/passbook.png)](https://travis-ci.org/lgleasain/passbook)
+
 # Passbook
 
 Passbook gem let's you create pkpass for passbook iOS 6
@@ -73,3 +75,10 @@ Please refer to apple iOS dev center for how to build cert and json
 
 ### 0.0.4
 Allow passbook gem to return a ZipOutputStream (needed when garbage collector delete tempfile before beeing able to use it) [Thx to applidget]
+
+License
+-------
+
+passbook-ios is released under the MIT license:
+
+* http://www.opensource.org/licenses/MIT
