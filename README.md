@@ -68,7 +68,7 @@ Please refer to apple iOS dev center for how to build cert and json.  [This arti
     send_data pkpass.string, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 
 ```
-if you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'.  Here is an example using the streaming mechanism.
+If you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'.  Here is an example using the streaming mechanism.
 
 ```
 require 'sinatra'
