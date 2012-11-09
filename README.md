@@ -33,7 +33,7 @@ If you are running this on a different machine then what you used to create your
       passbook.p12_key = Rails.root.join('key.pem')
       passbook.p12_certificate = Rails.root.join('certificate.pem')
       passbook.p12_password = 'cert password'
-
+    end
 ```
 If you are using Sinatra you can place this in the file you are executing or in a file that you do a require on.  You would also not reference Rails.root when specifying your file path.
 
