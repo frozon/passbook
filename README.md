@@ -25,7 +25,7 @@ Configure your config/initializers/passbook.rb
       passbook.p12_password = 'cert password'
     end
 ```
-if you are using Sinatra you can place this in the file you are executing or in a file that you require.
+If you are using Sinatra you can place this in the file you are executing or in a file that you do a require on.
 
 ## Usage
 
