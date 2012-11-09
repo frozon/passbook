@@ -17,7 +17,7 @@ Create initializer
     rails g passbook:config [Absolute path to the wwdc cert file] [Absolute path to your cert.p12 file] [Password for your certificate]
 ```
 
-Configure your config/initializers/passbook.rb
+Configure your config/initializers/passbook.rb 
 ```
     Passbook.configure do |passbook|
       passbook.wwdc_cert = Rails.root.joint('wwdc_cert.pem')
@@ -25,6 +25,8 @@ Configure your config/initializers/passbook.rb
       passbook.p12_password = 'cert password'
     end
 ```
+if you are using Sinatra you can place this in the file you are executing or in a file that you require.
+
 ## Usage
 
 Please refer to apple iOS dev center for how to build cert and json
@@ -56,6 +58,10 @@ Please refer to apple iOS dev center for how to build cert and json
     send_data pkpass.string, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 
 ```
+if you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'
+
+We will try to make this cleaner in the next release.
+
 ## Tests
 
   To launch tests : 
