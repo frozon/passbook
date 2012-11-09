@@ -26,7 +26,7 @@ Configure your config/initializers/passbook.rb
     end
 ```
 
-If you are running this on a different machine then what you used to create your WWDC keys
+If you are running this on a different machine from what you used to create your WWDC keys
 ```
     Passbook.configure do |passbook|
       passbook.wwdc_cert = Rails.root.join('wwdc_cert.pem')
