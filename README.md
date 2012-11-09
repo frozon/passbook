@@ -75,11 +75,6 @@ require 'sinatra'
 require 'passbook'
 require 'active_support/json/encoding'
 
-module Passbook
-  attr_accessor :p12_password, :p12_key, :p12_certificate, :wwdc_cert
-
-end
-
 Passbook.configure do |passbook|
   passbook.p12_password = '12345'
   passbook.p12_key = 'passkey.pem'
