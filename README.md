@@ -20,16 +20,26 @@ Create initializer
 Configure your config/initializers/passbook.rb 
 ```
     Passbook.configure do |passbook|
-      passbook.wwdc_cert = Rails.root.joint('wwdc_cert.pem')
+      passbook.wwdc_cert = Rails.root.join('wwdc_cert.pem')
       passbook.p12_cert = Rails.root.join('cert.p12')
       passbook.p12_password = 'cert password'
     end
 ```
-If you are using Sinatra you can place this in the file you are executing or in a file that you do a require on.
+
+If you are running this on a different machine then what you used to create your WWDC keys
+```
+    Passbook.configure do |passbook|
+      passbook.wwdc_cert = Rails.root.join('wwdc_cert.pem')
+      passbook.p12_key = Rails.root.join('key.pem')
+      passbook.p12_certificate = Rails.root.join('certificate.pem')
+      passbook.p12_password = 'cert password'
+
+```
+If you are using Sinatra you can place this in the file you are executing or in a file that you do a require on.  You would also not reference Rails.root when specifying your file path.
 
 ## Usage
 
-Please refer to apple iOS dev center for how to build cert and json
+Please refer to apple iOS dev center for how to build cert and json.  [This article is also helpful.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734)
 ```
     pass = Passbook::PKPass.new 'your json data'
 
