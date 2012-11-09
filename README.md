@@ -68,7 +68,34 @@ Please refer to apple iOS dev center for how to build cert and json.  [This arti
     send_data pkpass.string, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 
 ```
-if you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'
+if you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'.  Here is an example using the streaming mechanism.
+
+```
+require 'sinatra'
+require 'passbook'
+require 'active_support/json/encoding'
+
+module Passbook
+  attr_accessor :p12_password, :p12_key, :p12_certificate, :wwdc_cert
+
+end
+
+Passbook.configure do |passbook|
+  passbook.p12_password = '12345'
+  passbook.p12_key = 'passkey.pem'
+  passbook.p12_certificate = 'passcertificate.pem'
+  passbook.wwdc_cert = 'WWDR.pem'
+end
+
+get '/passbook' do
+  pass = # valid passbook json.  refer to the wwdc documentation.
+  passbook = Passbook::PKPass.new pass
+  passbook.addFiles ['logo.png', 'logo@2x.png', 'icon.png', 'icon@2x.png']
+  response['Content-Type'] = 'application/vnd.apple.pkpass'
+  attachment 'mypass.pkpass'
+  passbook.stream.string
+end
+```
 
 We will try to make this cleaner in the next release.
 
