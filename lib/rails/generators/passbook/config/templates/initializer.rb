@@ -1,3 +1,5 @@
+require 'passbook'
+
 Passbook.configure do |passbook|
 
   # Path to your wwdc cert file
