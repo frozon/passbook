@@ -1,12 +1,17 @@
 [![Build Status](https://travis-ci.org/lgleasain/passbook.png)](https://travis-ci.org/lgleasain/passbook)
 
-# Passbook
+# passbook-ios
 
-Passbook gem let's you create pkpass for passbook iOS 6
+The passbook-ios gem let's you create a pkpass for passbook in iOS 6+
 
 ## Installation
 
-TODO : push the gem to rubygems.org
+Include the passbook-ios gem in your project.
+
+IE:  In your Gemfile 
+```
+gem 'passbook-ios'
+```
 
 ## Configuration
 
