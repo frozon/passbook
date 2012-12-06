@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # Specify your gem's dependencies in passbook.gemspec
 gem 'rubyzip'
+gem 'grocer'
 
 group :test, :development do
   gem 'rack-test'
