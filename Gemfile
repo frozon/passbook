@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gem 'rubyzip'
 
 group :test, :development do
+  gem 'rack-test'
   gem 'activesupport'
   gem 'jeweler'
   gem 'simplecov'

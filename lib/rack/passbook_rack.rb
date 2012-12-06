@@ -5,6 +5,23 @@ module Rack
     end
 
     def call(env)
+      method_and_params = find_method env['PATH_INFO']
+      if method_and_params
+        case method_and_params[:method]
+        when 'device_register_delete'
+          if env['REQUEST_METHOD'] == 'POST'
+            posted_params = JSON.parse(env['rack.input'].read 1000)
+            response = Passbook::PassbookNotification.register_pass(method_and_params[:params].merge! posted_params)
+            [response[:status], {}, ['']]
+          else
+          end
+        when 'passes_for_device'
+          response = Passbook::PassbookNotification.passes_for_device(method_and_params[:params])
+          [response ? 200 : 204, {}, [response.to_json]]
+        else
+        end
+      else
+      end
     end
 
     def append_parameter_separator url
@@ -23,15 +40,21 @@ module Rack
           (parsed_path[url_beginning + 3 ] == 'registrations')
 
           if args_length == 6
-            return {'method' => 'device_register_delete',
-              'params' => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
+            return {:method => 'device_register_delete',
+              :params => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
                 'passTypeIdentifier' => parsed_path[url_beginning + 4],
                 'serialNumber' => parsed_path[url_beginning + 5]}}
           elsif args_length == 5
-            return {'method' => 'passes_for_device',
-              'params' => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
+            return {:method => 'passes_for_device',
+              :params => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
                 'passTypeIdentifier' => parsed_path[url_beginning + 4]}}
           end
+        elsif parsed_path[url_beginning + 1] == 'passes' and args_length == 4
+          return {:method => 'latest_pass',
+            :params => {'passTypeIdentifier' => parsed_path[url_beginning + 2],
+              'serialNumber' => parsed_path[url_beginning + 3]}}
+        elsif parsed_path[url_beginning + 1] == 'log' and args_length == 2
+          return {:method => 'log'}
         end
       end
 
