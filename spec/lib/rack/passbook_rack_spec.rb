@@ -10,6 +10,8 @@ describe Rack::PassbookRack  do
   let(:passes_for_device_params) {{'deviceLibraryIdentifier' => 'fe772e610be3efafb65ed77772ca311a',
     'passTypeIdentifier' => 'pass.com.polyglotprogramminginc.testpass'}}
   let(:latest_pass_path) {'/v1/passes/pass.com.polyglotprogramminginc.testpass/27-1'}
+  let(:latest_pass_params) {{'passTypeIdentifier' => 'pass.com.polyglotprogramminginc.testpass',
+                                'serialNumber' => '27-1'}}
   let(:log_path) {'/v1/log'}
   let(:push_token) {"8c56f2e787d9c089963960ace834bc2875e3f0cf7745da5b98d58bc6be05b4dc"}
 
@@ -58,8 +60,7 @@ describe Rack::PassbookRack  do
     context 'latest pass' do
       subject {passbook_rack.find_method(latest_pass_path)}
       its([:method]) {should eq 'latest_pass'}
-      its([:params]) {should eq('passTypeIdentifier' => 'pass.com.polyglotprogramminginc.testpass',
-                                'serialNumber' => '27-1') }
+      its([:params]) {should eq(latest_pass_params) }
     end
 
     context 'latest pass' do
@@ -114,6 +115,68 @@ describe Rack::PassbookRack  do
         end
       end
     end
+
+    context 'get latest pass' do
+      context 'valid pass' do
+        let(:raw_pass) {'some url encoded text'}
+
+        before do
+          Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
+            and_return(raw_pass)
+          get latest_pass_path
+        end
+
+        subject {last_response}
+        its(:status) {should eq 200}
+        its(:header) {should eq({'Content-Type' => 'application/vnd.apple.pkpass', 
+          'Content-Disposition' => 'attachment', 'filename' => '27-1.pkpass', 'Content-Length' => '21'})}
+        its(:body) {should eq raw_pass}
+      end
+
+      context 'no pass' do
+        before do
+          Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
+            and_return(nil)
+          get latest_pass_path
+        end
+
+        subject {last_response}
+        its(:status) {should eq 204}
+      end
+    end
+
+    context 'unregister pass' do
+      before do
+        Passbook::PassbookNotification.should_receive(:unregister_pass).
+          with(register_delete_params).and_return({:status => 200})
+        delete register_delete_path
+      end
+
+      subject {last_response}
+      its(:status) {should eq 200}
+    end    
+
+    context 'log' do
+      let(:log_params) {{'logs' => ['some error']}}
+      before do
+        Passbook::PassbookNotification.should_receive(:log).
+          with(log_params)
+        post log_path, log_params.to_json
+      end
+
+      subject {last_response}
+      its(:status) {should eq 200}
+    end
+
+    context 'non passbook requests' do
+      before do
+        get '/foo'
+      end
+
+      subject {last_response}
+      its(:status) {should eq 200}
+      its(:body) {should eq 'test app'}
+    end    
   end
 
 end

@@ -2,6 +2,7 @@ module Rack
   class PassbookRack
 
     def initialize(app)
+      @app = app
     end
 
     def call(env)
@@ -13,14 +14,29 @@ module Rack
             posted_params = JSON.parse(env['rack.input'].read 1000)
             response = Passbook::PassbookNotification.register_pass(method_and_params[:params].merge! posted_params)
             [response[:status], {}, ['']]
-          else
+          elsif env['REQUEST_METHOD'] == 'DELETE'
+            response = Passbook::PassbookNotification.unregister_pass(method_and_params[:params])
+            [response[:status], {}, {}]
           end
         when 'passes_for_device'
           response = Passbook::PassbookNotification.passes_for_device(method_and_params[:params])
           [response ? 200 : 204, {}, [response.to_json]]
+        when 'latest_pass'
+          response = Passbook::PassbookNotification.latest_pass(method_and_params[:params])
+          if response
+            [200, {'Content-Type' => 'application/vnd.apple.pkpass', 
+              'Content-Disposition' => 'attachment', 
+              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass"}, response]
+          else
+            [204, {}, {}]
+          end
+        when 'log'
+          Passbook::PassbookNotification.log JSON.parse(env['rack.input'].read 10000)
+          [200, {}, {}]
         else
         end
       else
+        @app.call env
       end
     end
 
