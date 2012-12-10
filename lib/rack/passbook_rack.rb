@@ -26,7 +26,7 @@ module Rack
           if response
             [200, {'Content-Type' => 'application/vnd.apple.pkpass', 
               'Content-Disposition' => 'attachment', 
-              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass"}, response]
+              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass"}, [response]]
           else
             [204, {}, {}]
           end
