@@ -11,12 +11,11 @@ module Rack
         case method_and_params[:method]
         when 'device_register_delete'
           if env['REQUEST_METHOD'] == 'POST'
-            posted_params = JSON.parse(env['rack.input'].read 1000)
-            response = Passbook::PassbookNotification.register_pass(method_and_params[:params].merge! posted_params)
-            [response[:status], {}, ['']]
+            [Passbook::PassbookNotification.
+              register_pass(method_and_params[:params].merge! JSON.parse(env['rack.input'].read 1000))[:status], 
+              {}, ['']]
           elsif env['REQUEST_METHOD'] == 'DELETE'
-            response = Passbook::PassbookNotification.unregister_pass(method_and_params[:params])
-            [response[:status], {}, {}]
+            [Passbook::PassbookNotification.unregister_pass(method_and_params[:params])[:status], {}, {}]
           end
         when 'passes_for_device'
           response = Passbook::PassbookNotification.passes_for_device(method_and_params[:params])
@@ -83,9 +82,9 @@ module Rack
         return_hash = {:method => method, :params => 
           {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2], 
             'passTypeIdentifier' => parsed_path[url_beginning + 4]}}
-        return_hash[:params]['serialNumber'] = parsed_path[url_beginning + 5] if 
+          return_hash[:params]['serialNumber'] = parsed_path[url_beginning + 5] if 
           method == 'device_register_delete'
-        return_hash
+          return_hash
       end
     end
 
