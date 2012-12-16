@@ -46,6 +46,7 @@ module Rack
     def each(&block)
     end
 
+
     def find_method(path)
       parsed_path = path.split '/'
       url_beginning = parsed_path.index 'v1'
@@ -54,21 +55,13 @@ module Rack
 
         if  (parsed_path[url_beginning + 1 ] == 'devices') and
           (parsed_path[url_beginning + 3 ] == 'registrations')
-
           if args_length == 6
-            return {:method => 'device_register_delete',
-              :params => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
-                'passTypeIdentifier' => parsed_path[url_beginning + 4],
-                'serialNumber' => parsed_path[url_beginning + 5]}}
+            return method_and_params_hash 'device_register_delete', path
           elsif args_length == 5
-            return {:method => 'passes_for_device',
-              :params => {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
-                'passTypeIdentifier' => parsed_path[url_beginning + 4]}}
+            return method_and_params_hash 'passes_for_device', path
           end
         elsif parsed_path[url_beginning + 1] == 'passes' and args_length == 4
-          return {:method => 'latest_pass',
-            :params => {'passTypeIdentifier' => parsed_path[url_beginning + 2],
-              'serialNumber' => parsed_path[url_beginning + 3]}}
+          return method_and_params_hash 'latest_pass', path
         elsif parsed_path[url_beginning + 1] == 'log' and args_length == 2
           return {:method => 'log'}
         end
@@ -76,6 +69,27 @@ module Rack
 
       return nil       
     end
+
+    private 
+
+    def method_and_params_hash(method, path)
+      parsed_path = path.split '/'
+      url_beginning = parsed_path.index 'v1'
+      if method == 'latest_pass'
+        {:method => 'latest_pass',
+          :params => {'passTypeIdentifier' => parsed_path[url_beginning + 2],
+            'serialNumber' => parsed_path[url_beginning + 3]}}
+      else 
+        return_hash = {:method => method, :params => 
+          {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2], 
+            'passTypeIdentifier' => parsed_path[url_beginning + 4]}}
+        return_hash[:params]['serialNumber'] = parsed_path[url_beginning + 5] if 
+          method == 'device_register_delete'
+        return_hash
+      end
+    end
+
+
   end
 end
 
