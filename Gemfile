@@ -2,12 +2,10 @@ source 'https://rubygems.org'
 
 # Specify your gem's dependencies in passbook.gemspec
 gem 'rubyzip'
-
-platforms :jruby do
-  gem 'jruby-openssl', '0.7.7'
-end
+gem 'grocer'
 
 group :test, :development do
+  gem 'rack-test'
   gem 'activesupport'
   gem 'jeweler'
   gem 'simplecov'
