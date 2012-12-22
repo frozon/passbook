@@ -223,6 +223,9 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
 ## Changelog
 
+### 0.0.4
+Allow passbook gem to return a ZipOutputStream (needed when garbage collector delete tempfile before beeing able to use it) [Thx to applidget]
+
 ### 0.2.0
 Adding support for push notification updates for passes.
 
