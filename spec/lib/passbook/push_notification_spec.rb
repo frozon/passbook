@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'grocer'
 
-describe Passbook::PassbookNotification  do
+describe Passbook::PushNotification  do
 
   context 'send notification' do
     let(:grocer_pusher) {double 'Grocer'}
@@ -16,7 +16,7 @@ describe Passbook::PassbookNotification  do
       Passbook.should_receive(:notification_gateway).and_return 'honeybadger.apple.com'
     end
 
-    subject {Passbook::PassbookNotification.send_notification('my token')}
+    subject {Passbook::PushNotification.send_notification('my token')}
     it {should eq 55}
   end
 end
