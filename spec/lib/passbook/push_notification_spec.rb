@@ -10,7 +10,7 @@ describe Passbook::PushNotification  do
 
     before :each do
       Passbook.should_receive(:notification_cert).and_return './notification_cert.pem'
-      Grocer::Notification.should_receive(:new).with(:device_token => 'my token').and_return notification      
+      Grocer::PassbookNotification.should_receive(:new).with(:device_token => 'my token').and_return notification 
       grocer_pusher.should_receive(:push).with(notification).and_return 55
       Grocer.should_receive(:pusher).with(notification_settings).and_return grocer_pusher
       Passbook.should_receive(:notification_gateway).and_return 'honeybadger.apple.com'
