@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "passbook-ios"
-  s.version = "0.1.2"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Thomas Lauro", "Lance Gleason"]
-  s.date = "2012-11-18"
+  s.date = "2013-01-06"
   s.description = "This gem allows you to create IOS Passbooks.  Unlike some,  this works with Rails but does not require it."
   s.email = ["thomas@lauro.fr", "lgleason@polyglotprogramminginc.com"]
   s.extra_rdoc_files = [
@@ -26,7 +26,9 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/passbook.rb",
     "lib/passbook/pkpass.rb",
+    "lib/passbook/push_notification.rb",
     "lib/passbook/version.rb",
+    "lib/rack/passbook_rack.rb",
     "lib/rails/generators/passbook/config/config_generator.rb",
     "lib/rails/generators/passbook/config/templates/initializer.rb",
     "passbook-ios.gemspec",
@@ -36,6 +38,8 @@ Gem::Specification.new do |s|
     "spec/data/logo.png",
     "spec/data/logo@2x.png",
     "spec/lib/passbook/pkpass_spec.rb",
+    "spec/lib/passbook/push_notification_spec.rb",
+    "spec/lib/rack/passbook_rack_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/frozon/passbook"
@@ -49,6 +53,8 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rubyzip>, [">= 0"])
+      s.add_runtime_dependency(%q<grocer>, [">= 0"])
+      s.add_development_dependency(%q<rack-test>, [">= 0"])
       s.add_development_dependency(%q<activesupport>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<simplecov>, [">= 0"])
@@ -57,6 +63,8 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<yard>, [">= 0"])
     else
       s.add_dependency(%q<rubyzip>, [">= 0"])
+      s.add_dependency(%q<grocer>, [">= 0"])
+      s.add_dependency(%q<rack-test>, [">= 0"])
       s.add_dependency(%q<activesupport>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<simplecov>, [">= 0"])
@@ -66,6 +74,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<rubyzip>, [">= 0"])
+    s.add_dependency(%q<grocer>, [">= 0"])
+    s.add_dependency(%q<rack-test>, [">= 0"])
     s.add_dependency(%q<activesupport>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<simplecov>, [">= 0"])
