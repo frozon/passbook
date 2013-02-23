@@ -1,16 +1,16 @@
 [![Build Status](https://travis-ci.org/lgleasain/passbook.png)](https://travis-ci.org/lgleasain/passbook)
 
-# passbook-ios
+# passbook
 
-The passbook-ios gem let's you create a pkpass for passbook in iOS 6+
+The passbook gem let's you create a pkpass for passbook in iOS 6+
 
 ## Installation
 
-Include the passbook-ios gem in your project.
+Include the passbook gem in your project.
 
-IE:  In your Gemfile 
+IE:  In your Gemfile
 ```
-gem 'passbook-ios'
+gem 'passbook'
 ```
 
 ## Configuration
@@ -22,7 +22,7 @@ Create initializer
     rails g passbook:config [Absolute path to the wwdc cert file] [Absolute path to your cert.p12 file] [Password for your certificate]
 ```
 
-Configure your config/initializers/passbook.rb 
+Configure your config/initializers/passbook.rb
 ```
     Passbook.configure do |passbook|
       passbook.wwdc_cert = Rails.root.join('wwdc_cert.pem')
@@ -44,7 +44,7 @@ If you are using Sinatra you can place this in the file you are executing or in 
 
 If You are doing push notifications then you will need to add some extra configuration options,  namely a push notification certificate and a notification gateway certificate.  Look at the Grocer gem documentation to find information on how to create this certificate.  Settings you will want ot use for the notification gateway are either 'gateway.push.apple.com' for production,  'gateway.sandbox.push.apple.com' for developmetn and 'localhost' for unit tests.
 ```
-    Passbook.configure do |passbook|     
+    Passbook.configure do |passbook|
       .....other settings.....
       passbook.notification_gateway = 'gateway.push.apple.com'
       passbook.notification_cert = 'lib/assets/my_notification_cert.pem'
@@ -115,7 +115,7 @@ We will try to make this cleaner in subsequent releases.
 
 ### Passbook
 
-If you want to support passbook push notification updates you will need to congigure the appropriate bits above.  
+If you want to support passbook push notification updates you will need to congigure the appropriate bits above.
 
 In order to support push notifications you will need to have a basic understanding of the way that push notifications work and how the data is passed back and forth.  See [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Creating.html) for basic information about passes and [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Updating.html#//apple_ref/doc/uid/TP40012195-CH5-SW1) to understand the information that needs to be exchanged between each device and your application to support the update service.
 
@@ -125,7 +125,7 @@ Your pass will need to have a field called 'webServiceURL' with the base url to 
 ...
   "webserviceURL" : "https://www.honeybadgers.com/",
   "authenticationToken" : "yummycobras"
-...  
+...
 ```
 
 Passbook-ios includes rack middleware to make the job of supporting the passbook endpoints easier.  You will need to configure the middleware as outlined above and then implement a class called Passbook::PassbookNotification.  Below is an annotated implementation.
@@ -136,15 +136,15 @@ module Passbook
 
     # This is called whenever a new pass is saved to a users passbook or the
     # notifications are re-enabled.  You will want to persist these values to
-    # allow for updates on subsequent calls in the call chain.  You can have 
-    # multiple push tokens and serial numbers for a specific 
+    # allow for updates on subsequent calls in the call chain.  You can have
+    # multiple push tokens and serial numbers for a specific
     # deviceLibraryIdentifier.
 
     def self.register_pass(options)
       the_passes_serial_number = options['serialNumber']
       the_devices_device_library_identifier = options['deviceLibraryIdentifier']
       the_devices_push_token = options['pushToken']
-      
+
       # this is if the pass registered successfully
       # change the code to 200 if the pass has already been registered
       # or another appropriate code if something went wrong.
@@ -152,14 +152,14 @@ module Passbook
     end
 
     # This is called when the device receives a push notification from apple.
-    # You will need to return the serial number of all passes associated with 
+    # You will need to return the serial number of all passes associated with
     # that deviceLibraryIdentifier.
- 
+
     def self.passes_for_device(options)
       device_library_identifier = options['deviceLibraryIdentifier']
-      
+
       # the 'lastUpdated' uses integers values to tell passbook if the pass is
-      # more recent than the current one.  If you just set it is the same value 
+      # more recent than the current one.  If you just set it is the same value
       # every time the pass will update and you will get a warning in the log files.
       # you can use the time in milliseconds,  a counter or any other numbering scheme.
       # you then also need to return an array of serial numbers.
@@ -178,10 +178,10 @@ module Passbook
     # this returns your updated pass
     def self.latest_pass(options)
       the_pass_serial_number = options['serialNumber']
-      # create your PkPass the way you did when your first created the pass.  
-      # you will want to return 
+      # create your PkPass the way you did when your first created the pass.
+      # you will want to return
       my_pass = PkPass.new 'your pass json'
-      # you will want to return the string from the stream of your PkPass object. 
+      # you will want to return the string from the stream of your PkPass object.
       mypass.stream.string
     end
 
@@ -194,21 +194,21 @@ module Passbook
 
   end
 end
- 
+
 ```
 
 To send a push notification for a updated pass simply call Passbook::PassbookPushNotification.send_notifications_for_promotion with the push token for the pass you are updating
 
 ```
   Passbook::PassbookPushNotification.send_notifications_for_promotion the_pass_push_token
-  
+
 ```
 
 Apple will send out a notification to your phone (usually within 15 minutes or less),  which will cause the phone that this push notification is associated with to make a call to your server to get pass serial numbers and to then get the updated pass.  Each phone/pass combination has it's own push token whch will require a separate call for every phone that has push notifications enabled for a pass (this is an Apple thing).  In the future we may look into offering background process support for this as part of this gem.  For now,  if you have a lot of passes to update you will need to do this yourself.
 
 ## Tests
 
-  To launch tests : 
+  To launch tests :
 ```
   bundle exec rspec spec/lib/passbook/pkpass_spec.rb
 ```
@@ -232,6 +232,6 @@ Adding support for push notification updates for passes.
 License
 -------
 
-passbook-ios is released under the MIT license:
+passbook is released under the MIT license:
 
 * http://www.opensource.org/licenses/MIT

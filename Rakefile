@@ -12,7 +12,7 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "passbook-ios"
+  gem.name = "passbook"
   gem.homepage = "http://github.com/frozon/passbook"
   gem.license = "MIT"
   gem.summary = %Q{A IOS Passbook generator.}
