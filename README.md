@@ -128,7 +128,7 @@ Your pass will need to have a field called 'webServiceURL' with the base url to 
 ...
 ```
 
-Passbook-ios includes rack middleware to make the job of supporting the passbook endpoints easier.  You will need to configure the middleware as outlined above and then implement a class called Passbook::PassbookNotification.  Below is an annotated implementation.
+Passbook includes rack middleware to make the job of supporting the passbook endpoints easier.  You will need to configure the middleware as outlined above and then implement a class called Passbook::PassbookNotification.  Below is an annotated implementation.
 
 ```
 module Passbook
