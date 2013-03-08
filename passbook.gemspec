@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "passbook"
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Thomas Lauro", "Lance Gleason"]
-  s.date = "2013-02-23"
+  s.date = "2013-03-08"
   s.description = "This gem allows you to create IOS Passbooks.  Unlike some,  this works with Rails but does not require it."
   s.email = ["thomas@lauro.fr", "lgleason@polyglotprogramminginc.com"]
   s.extra_rdoc_files = [
@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
     "lib/rack/passbook_rack.rb",
     "lib/rails/generators/passbook/config/config_generator.rb",
     "lib/rails/generators/passbook/config/templates/initializer.rb",
-    "passbook-ios.gemspec",
     "passbook.gemspec",
     "spec/data/icon.png",
     "spec/data/icon@2x.png",
