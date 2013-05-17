@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'commander/import'
+require 'terminal-table'
+
+$:.push File.expand_path("../../lib", __FILE__)
+require 'passbook'
+
+HighLine.track_eof = false # Fix for built-in Ruby
+Signal.trap("INT") {} # Suppress backtrace when exiting command
+
+program :version, '0.1'
+program :description, 'A command-line interface for generating and previewing passbook passes'
+
+program :help, 'Author', 'Thomas Lauro <>, Lance Gleason <lgleason@polyglotprogramminginc.com>'
+program :help, 'Website', 'https://github.com/frozon/passbook'
+program :help_formatter, :compact
+
+default_command :help
+
+require 'passbook/commands'
