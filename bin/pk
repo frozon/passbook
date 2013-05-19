@@ -18,4 +18,4 @@ program :help_formatter, :compact
 
 default_command :help
 
-require 'passbook/commands'
+require 'commands/commands'

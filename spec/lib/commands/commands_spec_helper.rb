@@ -2,7 +2,12 @@ require 'spec_helper'
 require 'terminal-table'
 require 'commander/import'
 
-Dir['lib/commands/**/*.rb'].each {|f| require File.join(File.dirname(__FILE__), '../../..', f.gsub(/.rb/, ''))}
+def load_commands
+  Dir['lib/commands/**/*.rb'].each {|f|
+    load File.join(File.dirname(__FILE__), '../../..', f)
+    require File.join(File.dirname(__FILE__), '../../..', f.gsub(/.rb/, ''))
+  }
+end
 
 def mock_terminal
   @input = StringIO.new
@@ -12,18 +17,17 @@ end
 
 def new_command_runner *args, &block
   Commander::Runner.instance_variable_set :"@singleton", Commander::Runner.new(args)
-  program :name, 'test'
   program :version, '1.2.3'
-  program :description, 'something'
-  create_test_command
+  program :description, "Honey Badger Don't Care"
   yield if block
   Commander::Runner.instance
 end
 
 def run *args
-  new_command_runner(*args) do
-    program :help_formatter, Commander::HelpFormatter::Base
-  end.run!    
+  runner = new_command_runner(*args) do
+    load_commands
+  end
+  runner.run!  
   @output.string
 end
 
