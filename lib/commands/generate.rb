@@ -20,7 +20,7 @@ command :generate do |c|
     validate_type!
 
     FileUtils.mkdir_p @directory
-    FileUtils.cp File.join(CommandUtils.get_current_directory, '..', 'templates', "#{@type}.json"), File.join(@directory, 'pass.json')
+    FileUtils.cp File.join(CommandUtils.get_current_directory, '..', 'commands/templates', "#{@type}.json"), File.join(@directory, 'pass.json')
     ['icon.png', 'icon@2x.png'].each do |file|
       FileUtils.touch File.join(@directory, file)
     end

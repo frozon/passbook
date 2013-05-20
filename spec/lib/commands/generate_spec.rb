@@ -53,7 +53,7 @@ describe 'Generate' do
       specify 'valid type' do
         CommandUtils.should_receive(:get_current_directory).and_return('')
         FileUtils.should_receive(:mkdir_p).with('my_awesome_passbook')
-        FileUtils.should_receive(:cp).with("/../templates/boarding-pass.json", "my_awesome_passbook/pass.json")
+        FileUtils.should_receive(:cp).with("/../commands/templates/boarding-pass.json", "my_awesome_passbook/pass.json")
         FileUtils.should_receive(:touch).with("my_awesome_passbook/icon.png")
         FileUtils.should_receive(:touch).with("my_awesome_passbook/icon@2x.png")
         @input << "1\n"
