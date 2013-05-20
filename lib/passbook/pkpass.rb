@@ -7,6 +7,8 @@ module Passbook
   class PKPass
     attr_accessor :pass, :manifest_files
 
+    TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
+
     def initialize pass
       @pass      = pass
       @manifest_files     = []

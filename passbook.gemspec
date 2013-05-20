@@ -9,9 +9,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Thomas Lauro", "Lance Gleason"]
-  s.date = "2013-03-08"
+  s.date = "2013-05-05"
   s.description = "This gem allows you to create IOS Passbooks.  Unlike some,  this works with Rails but does not require it."
   s.email = ["thomas@lauro.fr", "lgleason@polyglotprogramminginc.com"]
+  s.executables = ["pk"]
   s.extra_rdoc_files = [
     "LICENSE",
     "README.md"
@@ -24,9 +25,13 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "bin/pk",
     "lib/passbook.rb",
+    "lib/passbook/commands.rb",
+    "lib/passbook/commands/generate.rb",
     "lib/passbook/pkpass.rb",
     "lib/passbook/push_notification.rb",
+    "lib/passbook/templates/boarding-pass.json",
     "lib/passbook/version.rb",
     "lib/rack/passbook_rack.rb",
     "lib/rails/generators/passbook/config/config_generator.rb",
@@ -44,15 +49,17 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/frozon/passbook"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "2.0.3"
   s.summary = "A IOS Passbook generator."
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<rubyzip>, [">= 0"])
       s.add_runtime_dependency(%q<grocer>, [">= 0"])
+      s.add_runtime_dependency(%q<commander>, [">= 0"])
+      s.add_runtime_dependency(%q<terminal-table>, [">= 0"])
       s.add_development_dependency(%q<rack-test>, [">= 0"])
       s.add_development_dependency(%q<activesupport>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
@@ -63,6 +70,8 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<rubyzip>, [">= 0"])
       s.add_dependency(%q<grocer>, [">= 0"])
+      s.add_dependency(%q<commander>, [">= 0"])
+      s.add_dependency(%q<terminal-table>, [">= 0"])
       s.add_dependency(%q<rack-test>, [">= 0"])
       s.add_dependency(%q<activesupport>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -74,6 +83,8 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<rubyzip>, [">= 0"])
     s.add_dependency(%q<grocer>, [">= 0"])
+    s.add_dependency(%q<commander>, [">= 0"])
+    s.add_dependency(%q<terminal-table>, [">= 0"])
     s.add_dependency(%q<rack-test>, [">= 0"])
     s.add_dependency(%q<activesupport>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])

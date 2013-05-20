@@ -1,0 +1,56 @@
+{
+    "formatVersion" : 1,
+    "passTypeIdentifier" : "pass.com.example.boarding-pass",
+    "description" : "Example Boarding Pass",
+    "teamIdentifier": "Example",
+    "organizationName": "Example",
+    "serialNumber" : "123456",
+    "foregroundColor": "#866B23",
+    "backgroundColor": "#FFD248",
+    "boardingPass" : {
+        "primaryFields" : [
+            {
+                "key" : "origin",
+                "label" : "Atlanta",
+                "value" : "ATL"
+            },
+            {
+                "key" : "destination",
+                "label" : "Johannesburg",
+                "value" : "JNB"
+            }
+        ],
+        "secondaryFields" : [
+            {
+                "key" : "boarding-gate",
+                "label" : "Gate",
+                "value" : "F12"
+            }
+        ],
+        "auxiliaryFields" : [
+            {
+                "key" : "seat",
+                "label" : "Seat",
+                "value" : "7A"
+            },
+            {
+                "key" : "passenger-name",
+                "label" : "Passenger",
+                "value" : "Honey Badger"
+            }
+        ],
+        "transitType" : "PKTransitTypeAir",
+        "barcode" : {
+            "message" : "DL123",
+            "format" : "PKBarcodeFormatQR",
+            "messageEncoding" : "iso-8859-1"
+        },
+        "backFields" : [
+            {
+                "key" : "terms",
+                "label" : "Terms and Conditions",
+                "value" : "Valid for date of travel only"
+            }
+        ]
+    }
+}
