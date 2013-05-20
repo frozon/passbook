@@ -30,7 +30,7 @@ module Rack
             [204, {}, {}]
           end
         when 'log'
-          Passbook::PassbookNotification.log JSON.parse(env['rack.input'].read 10000)
+          Passbook::PassbookNotification.passbook_log JSON.parse(env['rack.input'].read 10000)
           [200, {}, {}]
         else
         end
