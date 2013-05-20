@@ -54,13 +54,6 @@ end
 alias_command :archive, :build
 alias_command :b, :build
 
-# this was added for testability because I couldn't figure out something better.
-class CommandUtils
-  def get_assets(directory)
-    Dir[File.join(directory, '*')]
-  end
-end
-
 private
 
 def validate_output_filepath!

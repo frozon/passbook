@@ -3,6 +3,8 @@ $:.push File.expand_path('../', __FILE__)
 require 'commands/build'
 require 'commands/generate'
 #require 'commands/serve'
+# this was added for testability because I couldn't figure out something better.
+
 private
 
 def determine_directory!
@@ -24,3 +26,6 @@ end
 def validate_certificate!
   say_error "Missing or invalid certificate file" and abort if @certificate.nil? or not File.exist?(@certificate) 
 end
+
+
+

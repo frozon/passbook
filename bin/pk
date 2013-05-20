@@ -5,6 +5,7 @@ require 'terminal-table'
 
 $:.push File.expand_path("../../lib", __FILE__)
 require 'passbook'
+require 'utils/command_utils'
 
 HighLine.track_eof = false # Fix for built-in Ruby
 Signal.trap("INT") {} # Suppress backtrace when exiting command

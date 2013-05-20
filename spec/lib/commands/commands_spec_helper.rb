@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'terminal-table'
 require 'commander/import'
+require 'utils/command_utils'
 
 def load_commands
   Dir['lib/commands/**/*.rb'].each {|f|
@@ -53,3 +54,16 @@ RSpec::Matchers.define :exit_with_code do |exp_code|
   end
 end
 
+def run_raw_command(*args)
+  lambda{
+    run(*args)
+  }.should raise_error(SystemExit, ' ')
+end
+
+def run_command(*args, &block)
+  begin
+    run_raw_command *args
+  rescue
+    yield
+  end
+end
