@@ -187,7 +187,7 @@ module Passbook
 
     # This is called whenever there is something from the update process that is a warning
     # or error
-    def self.log(log)
+    def self.passbook_log(log)
       # this is a VERY crude logging example.  use the logger of your choice here.
       p "#{Time.now} #{log}"
     end

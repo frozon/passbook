@@ -159,7 +159,7 @@ describe Rack::PassbookRack  do
     context 'log' do
       let(:log_params) {{'logs' => ['some error']}}
       before do
-        Passbook::PassbookNotification.should_receive(:log).
+        Passbook::PassbookNotification.should_receive(:passbook_log).
           with(log_params)
         post log_path, log_params.to_json
       end
