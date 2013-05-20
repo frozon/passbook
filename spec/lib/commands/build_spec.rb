@@ -53,7 +53,6 @@ describe 'Build' do
 
           let(:pass_json) {'{"this":"is awesome json"}'}
           let(:pass_assets) {['pass.json', 'something.jpeg']}
-          let!(:pk_pass) {double 'passbook'}
 
           before :each do
             Passbook.should_receive(:wwdc_cert=).with 'jackels'      
@@ -61,15 +60,16 @@ describe 'Build' do
             Passbook.should_receive(:p12_certificate=).with 'badger_cert'      
             Passbook.should_receive(:p12_password=).with 'bees'    
             CommandUtils.should_receive(:get_assets).with('scraps').and_return pass_assets 
+            @pk_pass = double 'pk pass'
             File.should_receive(:read).with('pass.json').and_return pass_json 
-            Passbook::PKPass.should_receive(:new).with(pass_json).and_return pk_pass
-            pk_pass.should_receive(:addFiles).with pass_assets
+            Passbook::PKPass.should_receive(:new).with(pass_json).and_return @pk_pass
+            @pk_pass.should_receive(:addFiles).with pass_assets
           end
 
           specify 'are set from command line' do
             pass_stream = double 'passbook stream' 
             pass_stream.should_receive(:string).and_return 'my badass pass'
-            pk_pass.should_receive(:stream).and_return pass_stream
+            @pk_pass.should_receive(:stream).and_return pass_stream
             File.should_receive(:open).with('scraps.pkpass', 'w')
 
             run_command 'build', 'scraps', '-w', 'jackels',
@@ -79,7 +79,7 @@ describe 'Build' do
           end
 
           specify 'should catch a general error' do
-            pk_pass.should_receive(:stream).and_raise(StandardError.new('I have failed'))
+            @pk_pass.should_receive(:stream).and_raise(StandardError.new('I have failed'))
             run_command 'build', 'scraps', '-w', 'jackels',
               '-p', 'bees', '-k', 'badger_key', '-c', 'badger_cert' do
               @output.string.should eq "\e[31mError: I have failed\e[0m\n"
@@ -87,7 +87,7 @@ describe 'Build' do
           end
 
           specify 'should catch a general error' do
-            pk_pass.should_receive(:stream).and_raise(OpenSSL::PKCS12::PKCS12Error.new('I am a failure'))
+            @pk_pass.should_receive(:stream).and_raise(OpenSSL::PKCS12::PKCS12Error.new('I am a failure'))
             run_command 'build', 'scraps', '-w', 'jackels',
               '-p', 'bees', '-k', 'badger_key', '-c', 'badger_cert' do
               @output.string.should eq "\e[31mError: I am a failure\e[0m\n\e[33mYou may be getting this error because the certificate password is either incorrect or missing\e[0m\n"
