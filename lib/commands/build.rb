@@ -29,7 +29,7 @@ command :build do |c|
       passbook.p12_password = @password
     end
 
-    assets = Dir[File.join(@directory, '*')]
+    assets = CommandUtils.get_assets @directory
     pass_json = File.read(assets.delete(assets.detect{|file| File.basename(file) == 'pass.json'}))
     pass = Passbook::PKPass.new(pass_json)
     pass.addFiles assets
@@ -53,6 +53,13 @@ end
 
 alias_command :archive, :build
 alias_command :b, :build
+
+# this was added for testability because I couldn't figure out something better.
+class CommandUtils
+  def get_assets(directory)
+    Dir[File.join(directory, '*')]
+  end
+end
 
 private
 
