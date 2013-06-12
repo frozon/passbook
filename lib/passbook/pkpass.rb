@@ -101,6 +101,7 @@ module Passbook
       raise 'Serial Number missing' unless @pass.include?('serialNumber')
       raise 'Organization Name Identifier missing' unless @pass.include?('organizationName')
       raise 'Format Version' unless @pass.include?('formatVersion')
+      raise 'Format Version should be a numeric' unless JSON.parse(@pass)['formatVersion'].is_a?(Numeric)
       raise 'Description' unless @pass.include?('description')
     end
 

@@ -125,4 +125,23 @@ describe Passbook  do
       end 
     end
   end
+
+  # TODO: find a proper way to do this
+  context 'Error catcher' do
+    context 'formatVersion' do
+      let (:base_path) {'spec/data'}
+
+      before :each do
+        pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
+        tpass = JSON.parse(pass.pass)
+        tpass['formatVersion'] = 'It should be a numeric'
+        pass.pass = tpass.to_json
+      end
+
+      it "raise an error" do
+        expect { pass.build }.to raise_error('Format Version should be a numeric')
+      end
+
+    end
+  end
 end
