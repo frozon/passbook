@@ -102,6 +102,20 @@ describe Rack::PassbookRack  do
         end
       end
 
+      context 'with passes modified since' do
+        before do
+          Passbook::PassbookNotification.should_receive(:passes_for_device).
+            with(passes_for_device_params.merge!('passesUpdatedSince' => '1371189712')).and_return(nil)
+          path_with_update_since = passes_for_device_path + "?passesUpdatedSince=1371189712"
+          get path_with_update_since
+        end
+
+        context 'status' do
+          subject {last_response.status}
+          it {should eq 204}
+        end
+      end
+
       context 'without passes' do
         before do
           Passbook::PassbookNotification.should_receive(:passes_for_device).
