@@ -3,9 +3,15 @@ module Rack
 
     def initialize(app)
       @app = app
+      @parameters = {}
     end
 
     def call(env)
+      if env['HTTP_AUTHORIZATION']
+        p = env['HTTP_AUTHORIZATION'].dup
+        p.gsub!(/ApplePass /,'')
+        @parameters['authToken'] = p
+      end
       method_and_params = find_method env['PATH_INFO']
       if method_and_params
         case method_and_params[:method]
@@ -76,15 +82,16 @@ module Rack
       url_beginning = parsed_path.index 'v1'
       if method == 'latest_pass'
         {:method => 'latest_pass',
-          :params => {'passTypeIdentifier' => parsed_path[url_beginning + 2],
-            'serialNumber' => parsed_path[url_beginning + 3]}}
-      else 
-        return_hash = {:method => method, :params => 
-          {'deviceLibraryIdentifier' => parsed_path[url_beginning + 2], 
-            'passTypeIdentifier' => parsed_path[url_beginning + 4]}}
-          return_hash[:params]['serialNumber'] = parsed_path[url_beginning + 5] if 
-          method == 'device_register_delete'
-          return_hash
+          :params => @parameters.merge!({'passTypeIdentifier' => parsed_path[url_beginning + 2],
+            'serialNumber' => parsed_path[url_beginning + 3]})}
+      else
+        return_hash = {:method => method, :params =>
+          @parameters.merge!({'deviceLibraryIdentifier' => parsed_path[url_beginning + 2],
+            'passTypeIdentifier' => parsed_path[url_beginning + 4]})}
+        if method == 'device_register_delete'
+          return_hash[:params]['serialNumber'] = parsed_path[url_beginning + 5]
+        end
+        return_hash
       end
     end
 

@@ -14,6 +14,7 @@ describe Rack::PassbookRack  do
                                 'serialNumber' => '27-1'}}
   let(:log_path) {'/v1/log'}
   let(:push_token) {"8c56f2e787d9c089963960ace834bc2875e3f0cf7745da5b98d58bc6be05b4dc"}
+  let(:auth_token) {"3c0adc9ccbcf3e733edeb897043a4835"}
 
   context 'find method' do
     let(:passbook_rack) {Rack::PassbookRack.new nil}
@@ -71,11 +72,22 @@ describe Rack::PassbookRack  do
 
   context 'rack middleware' do
 
-    context 'register pass' do
+    context 'register pass without authToken' do
       before do
         Passbook::PassbookNotification.should_receive(:register_pass).
           with(register_delete_params.merge!('pushToken' => push_token)).and_return({:status => 201})
         post register_delete_path, {"pushToken" => push_token}.to_json
+      end
+
+      subject {last_response}
+      its(:status) {should eq 201}
+    end
+
+    context 'register pass with authToken' do
+      before do
+        Passbook::PassbookNotification.should_receive(:register_pass).
+          with(register_delete_params.merge!('pushToken' => push_token,'authToken' => auth_token)).and_return({:status => 201})
+        post register_delete_path, {"pushToken" => push_token}.to_json, rack_env = {'HTTP_AUTHORIZATION' => auth_token}
       end
 
       subject {last_response}
@@ -145,7 +157,7 @@ describe Rack::PassbookRack  do
       end
     end
 
-    context 'unregister pass' do
+    context 'unregister pass without authToken' do
       before do
         Passbook::PassbookNotification.should_receive(:unregister_pass).
           with(register_delete_params).and_return({:status => 200})
@@ -154,7 +166,18 @@ describe Rack::PassbookRack  do
 
       subject {last_response}
       its(:status) {should eq 200}
-    end    
+    end
+
+    context 'unregister pass with authToken' do
+      before do
+        Passbook::PassbookNotification.should_receive(:unregister_pass).
+          with(register_delete_params.merge!('authToken' => auth_token)).and_return({:status => 200})
+        delete register_delete_path, {}, rack_env = {'HTTP_AUTHORIZATION' => auth_token}
+      end
+
+      subject {last_response}
+      its(:status) {should eq 200}
+    end
 
     context 'log' do
       let(:log_params) {{'logs' => ['some error']}}
