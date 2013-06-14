@@ -157,7 +157,6 @@ module Passbook
 
     def self.passes_for_device(options)
       device_library_identifier = options['deviceLibraryIdentifier']
-      passes_updated_since = options['passesUpdatedSince']
 
       # the 'lastUpdated' uses integers values to tell passbook if the pass is
       # more recent than the current one.  If you just set it is the same value
