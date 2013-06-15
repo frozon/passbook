@@ -12,6 +12,7 @@ module Rack
         p.gsub!(/ApplePass /,'')
         @parameters['authToken'] = p
       end
+      @parameters.merge!(Rack::Utils.parse_nested_query(env['QUERY_STRING']))
       method_and_params = find_method env['PATH_INFO']
       if method_and_params
         case method_and_params[:method]
