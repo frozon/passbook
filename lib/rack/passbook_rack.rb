@@ -8,9 +8,9 @@ module Rack
 
     def call(env)
       if env['HTTP_AUTHORIZATION']
-        p = env['HTTP_AUTHORIZATION'].dup
-        p.gsub!(/ApplePass /,'')
-        @parameters['authToken'] = p
+        parameters_duplicate = env['HTTP_AUTHORIZATION'].dup
+        parameters_duplicate.gsub!(/ApplePass /,'')
+        @parameters['authToken'] = parameters_duplicate
       end
       @parameters.merge!(Rack::Utils.parse_nested_query(env['QUERY_STRING']))
       method_and_params = find_method env['PATH_INFO']
