@@ -56,8 +56,13 @@ module Passbook
       self.file.path
     end
 
-    # Return a Tempfile containing our ZipStream
+    # Backward compatibility
     def file(options = {})
+      to_file options
+    end
+
+    # Return a Tempfile containing our ZipStream
+    def to_file options = {}
       options[:file_name] ||= 'pass.pkpass'
 
       temp_file = Tempfile.new(options[:file_name])
@@ -67,8 +72,13 @@ module Passbook
       temp_file
     end
 
-    # Return a ZipOutputStream
+    # Backward compatibility
     def stream
+      to_stream
+    end
+
+    # Return a ZipOutputStream
+    def to_stream
       manifest, signature = build
 
       outputZip manifest, signature
@@ -98,6 +108,16 @@ module Passbook
       data = data[0..data.index(str_end)-1]
 
       return Base64.decode64(data)
+    end
+
+    def valid?
+      manifest = createManifest
+      begin
+        checkPass manifest
+      rescue
+        return false
+      end
+      return true
     end
 
     private
