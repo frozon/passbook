@@ -9,6 +9,18 @@ module Passbook
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
+    # Require fields, meta programming for accessor
+    REQUIRED_FIELDS = %w(passTypeIdentifier teamIdentifier serialNumber organizationName formatVersion description)
+    REQUIRED_FIELDS.each do |accessor|
+      class_eval %Q{
+        def #{accessor}= value
+          json = JSON.parse(@pass)
+          json['#{accessor}'] = value
+          @pass = json.to_json
+        end
+      }
+    end
+
     def initialize pass
       @pass      = pass
       @manifest_files     = []
@@ -69,9 +81,9 @@ module Passbook
         key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
       else
         p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate 
+        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
-      key_hash 
+      key_hash
     end
 
     def createSignature manifest
@@ -96,13 +108,11 @@ module Passbook
       raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
 
       # Check for developer field in JSON
-      raise 'Pass Type Identifier missing' unless @pass.include?('passTypeIdentifier')
-      raise 'Team Identifier missing' unless @pass.include?('teamIdentifier')
-      raise 'Serial Number missing' unless @pass.include?('serialNumber')
-      raise 'Organization Name Identifier missing' unless @pass.include?('organizationName')
-      raise 'Format Version' unless @pass.include?('formatVersion')
+      REQUIRED_FIELDS.each do |require_field|
+        raise "#{require_field} mising" unless @pass.include?(require_field)
+      end
+      # Specific test
       raise 'Format Version should be a numeric' unless JSON.parse(@pass)['formatVersion'].is_a?(Numeric)
-      raise 'Description' unless @pass.include?('description')
     end
 
     def createManifest
