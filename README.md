@@ -144,9 +144,13 @@ module Passbook
       the_passes_serial_number = options['serialNumber']
       the_devices_device_library_identifier = options['deviceLibraryIdentifier']
       the_devices_push_token = options['pushToken']
+      the_pass_type_identifier = options["passTypeIdentifier"]
+      the_authentication_token = options['authToken']
 
       # this is if the pass registered successfully
       # change the code to 200 if the pass has already been registered
+      # 404 if pass not found for serialNubmer and passTypeIdentifier
+      # 401 if authorization failed
       # or another appropriate code if something went wrong.
       {:status => 201}
     end
@@ -157,6 +161,7 @@ module Passbook
 
     def self.passes_for_device(options)
       device_library_identifier = options['deviceLibraryIdentifier']
+      passes_updated_since = options['passesUpdatedSince']
 
       # the 'lastUpdated' uses integers values to tell passbook if the pass is
       # more recent than the current one.  If you just set it is the same value
@@ -171,6 +176,8 @@ module Passbook
       # a solid unique pair of identifiers to identify the pass are
       serial_number = options['serialNumber']
       device_library_identifier = options['deviceLibraryIdentifier']
+      the_pass_type_identifier = options["passTypeIdentifier"]
+      the_authentication_token = options['authToken']
       # return a status 200 to indicate that the pass was successfully unregistered.
       {:status => 200}
     end
