@@ -5,7 +5,7 @@ require 'base64'
 
 module Passbook
   class PKPass
-    attr_accessor :pass, :manifest_files
+    attr_accessor :pass, :manifest_files, :p12_password, :p12_cert
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
@@ -68,10 +68,10 @@ module Passbook
         key_hash[:key] = OpenSSL::PKey::RSA.new File.read(Passbook.p12_key), Passbook.p12_password
         key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
       else
-        p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate 
+        p12 = OpenSSL::PKCS12.new File.read(p12_cert || Passbook.p12_cert), p12_password || Passbook.p12_password
+        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
-      key_hash 
+      key_hash
     end
 
     def createSignature manifest
