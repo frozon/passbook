@@ -6,7 +6,6 @@
 Gem::Specification.new do |s|
   s.name = "passbook"
   s.version = "0.2.1"
-
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Thomas Lauro", "Lance Gleason"]
   s.date = "2013-05-05"
@@ -28,12 +27,12 @@ Gem::Specification.new do |s|
     "bin/pk",
     "lib/passbook.rb",
     "lib/commands/commands.rb",
-    "lib/commands/commands/generate.rb",
-    "lib/commands/commands/templates/boarding-pass.json",
-    "lib/commands/commands/templates/coupon.json",
-    "lib/commands/commands/templates/event-ticket.json",
-    "lib/commands/commands/templates/generic.json",
-    "lib/commands/commands/templates/store-card.json",
+    "lib/commands/generate.rb",
+    "lib/commands/templates/boarding-pass.json",
+    "lib/commands/templates/coupon.json",
+    "lib/commands/templates/event-ticket.json",
+    "lib/commands/templates/generic.json",
+    "lib/commands/templates/store-card.json",
     "lib/passbook/pkpass.rb",
     "lib/passbook/push_notification.rb",
     "lib/passbook/version.rb",
