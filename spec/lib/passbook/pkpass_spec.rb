@@ -71,6 +71,7 @@ describe Passbook  do
           Passbook.should_receive(:p12_key).and_return nil
           Passbook.should_receive(:p12_cert).and_return 'my_p12_cert'
           Passbook.should_receive(:p12_password).and_return 'password'
+          File.should_receive(:exists?).with('my_p12_cert').and_return(true)
           File.should_receive(:read).with('my_p12_cert').and_return 'my_p12_cert_file'
           OpenSSL::PKCS12.should_receive(:new).with('my_p12_cert_file', 'password').and_return p12
         end
@@ -90,6 +91,7 @@ describe Passbook  do
           pass.should_receive(:p12_cert).and_return 'my_p12_cert'
           pass.should_receive(:p12_password).and_return 'my_password'
           Passbook.should_receive(:p12_key).and_return nil
+          File.should_receive(:exists?).with('my_p12_cert').and_return(true)
           File.should_receive(:read).with('my_p12_cert').and_return 'my_p12_cert_file'
           OpenSSL::PKCS12.should_receive(:new).with('my_p12_cert_file', 'my_password').and_return p12
         end
