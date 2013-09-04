@@ -87,6 +87,14 @@ Please refer to apple iOS dev center for how to build cert and json.  [This arti
     send_data pkpass.string, type: 'application/vnd.apple.pkpass', disposition: 'attachment', filename: "pass.pkpass"
 
 ```
+Note: If you need to override the cert / password for a particular pass (you are creating passes for multiple companies / apps, for example, you can do so by overriding the p12_cert and p12_password on the PKPass itself)
+
+```
+    pass = Passbook::PKPass.new 'your json data'
+    pass.p12_cert = Rails.root.join('pass specific cert.p12')
+    pass.p12_password = 'cert password'
+```
+
 If you are using Sinatra you will need to include the 'active_support' gem and will need to require 'active_support/json/encoding'.  Here is an example using the streaming mechanism.
 
 ```
