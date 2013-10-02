@@ -57,7 +57,7 @@ describe Passbook  do
           File.should_receive(:read).with('my_p12_key').and_return 'my_p12_key_file'
           File.should_receive(:read).with('my_p12_certificate').and_return 'my_p12_certificate_file'
           OpenSSL::PKey::RSA.should_receive(:new).with('my_p12_key_file', 'password').and_return 'my_rsa_key'
-          OpenSSL::X509::Certificate.should_receive(:new).with('my_p12_certificate_file').and_return 'my_ssl_p12_cert' 
+          OpenSSL::X509::Certificate.should_receive(:new).with('my_p12_certificate_file').and_return 'my_ssl_p12_cert'
         end
 
         subject {pass.get_p12_cert_and_key}
@@ -92,7 +92,7 @@ describe Passbook  do
       pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
       pass.should_receive(:createSignature).and_return('Signed by the Honey Badger')
       @file_entries = []
-      Zip::ZipInputStream::open(zip_path) {|io|
+      Zip::InputStream::open(zip_path) {|io|
         while (entry = io.get_next_entry)
           @file_entries << entry.name
         end
@@ -122,7 +122,7 @@ describe Passbook  do
 
       after do
         temp_file.delete
-      end 
+      end
     end
   end
 
