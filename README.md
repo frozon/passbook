@@ -115,7 +115,7 @@ We will try to make this cleaner in subsequent releases.
 
 ### Passbook
 
-If you want to support passbook push notification updates you will need to congigure the appropriate bits above.
+If you want to support passbook push notification updates you will need to configure the appropriate bits above.
 
 In order to support push notifications you will need to have a basic understanding of the way that push notifications work and how the data is passed back and forth.  See [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Creating.html) for basic information about passes and [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Updating.html#//apple_ref/doc/uid/TP40012195-CH5-SW1) to understand the information that needs to be exchanged between each device and your application to support the update service.
 
