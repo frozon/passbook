@@ -1,6 +1,6 @@
 require 'digest/sha1'
 require 'openssl'
-require 'zip/zip'
+require 'zip'
 require 'base64'
 
 module Passbook
@@ -69,9 +69,9 @@ module Passbook
         key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
       else
         p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate 
+        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
-      key_hash 
+      key_hash
     end
 
     def createSignature manifest
@@ -122,7 +122,7 @@ module Passbook
 
     def outputZip manifest, signature
 
-      Zip::ZipOutputStream.write_buffer do |zip|
+      Zip::OutputStream.write_buffer do |zip|
         zip.put_next_entry 'pass.json'
         zip.write @pass
         zip.put_next_entry 'manifest.json'
