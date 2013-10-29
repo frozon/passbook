@@ -52,7 +52,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (~> 3.2.14)
+  activesupport
   commander
   grocer
   jeweler!
