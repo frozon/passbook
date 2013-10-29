@@ -8,7 +8,7 @@ gem 'terminal-table'
 
 group :test, :development do
   gem 'rack-test'
-  gem 'activesupport', '~> 3.2.14'
+  gem 'activesupport'
   gem 'jeweler', :git => 'git://github.com/foxnewsnetwork/jeweler.git', :branch => 'ruby-2.0.0-ifying'
   gem 'simplecov'
   gem 'rspec'
