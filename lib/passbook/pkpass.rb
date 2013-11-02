@@ -5,13 +5,14 @@ require 'base64'
 
 module Passbook
   class PKPass
-    attr_accessor :pass, :manifest_files
+    attr_accessor :pass, :manifest_files, :signer
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
     def initialize pass
-      @pass      = pass
-      @manifest_files     = []
+      @pass           = pass
+      @manifest_files = []
+      @signer         = Passbook::Signer.new
     end
 
     def addFile file
@@ -34,7 +35,7 @@ module Passbook
       checkPass manifest
 
       # Create pass signature
-      signature = createSignature manifest
+      signature = @signer.sign manifest
 
       return [manifest, signature]
     end
@@ -60,32 +61,6 @@ module Passbook
       manifest, signature = build
 
       outputZip manifest, signature
-    end
-
-    def get_p12_cert_and_key
-      key_hash = {}
-      if Passbook.p12_key
-        key_hash[:key] = OpenSSL::PKey::RSA.new File.read(Passbook.p12_key), Passbook.p12_password
-        key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
-      else
-        p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
-        key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
-      end
-      key_hash
-    end
-
-    def createSignature manifest
-      p12   = get_p12_cert_and_key
-      wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
-      pk7   = OpenSSL::PKCS7.sign p12[:cert], p12[:key], manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
-      data  = OpenSSL::PKCS7.write_smime pk7
-
-      str_debut = "filename=\"smime.p7s\"\n\n"
-      data = data[data.index(str_debut)+str_debut.length..data.length-1]
-      str_end = "\n\n------"
-      data = data[0..data.index(str_end)-1]
-
-      return Base64.decode64(data)
     end
 
     private
