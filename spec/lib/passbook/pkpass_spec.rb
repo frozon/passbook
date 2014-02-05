@@ -89,6 +89,7 @@ describe Passbook  do
     let (:entries) {["pass.json", "manifest.json", "signature", "icon.png", "icon@2x.png", "logo.png", "logo@2x.png"]}
 
     before :each do
+      pass.passTypeIdentifier = 'test.pass.book'
       pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
       pass.should_receive(:createSignature).and_return('Signed by the Honey Badger')
       @file_entries = []

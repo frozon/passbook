@@ -9,6 +9,18 @@ module Passbook
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
+    # Require fields, meta programming for accessor
+    REQUIRED_FIELDS = %w(passTypeIdentifier teamIdentifier serialNumber organizationName formatVersion description)
+    REQUIRED_FIELDS.each do |accessor|
+      class_eval %Q{
+        def #{accessor}= value
+          json = JSON.parse(@pass)
+          json['#{accessor}'] = value
+          @pass = json.to_json
+        end
+      }
+    end
+
     def initialize pass
       @pass      = pass
       @manifest_files     = []
@@ -44,8 +56,13 @@ module Passbook
       self.file.path
     end
 
-    # Return a Tempfile containing our ZipStream
+    # Backward compatibility
     def file(options = {})
+      to_file options
+    end
+
+    # Return a Tempfile containing our ZipStream
+    def to_file options = {}
       options[:file_name] ||= 'pass.pkpass'
 
       temp_file = Tempfile.new(options[:file_name])
@@ -55,8 +72,13 @@ module Passbook
       temp_file
     end
 
-    # Return a ZipOutputStream
+    # Backward compatibility
     def stream
+      to_stream
+    end
+
+    # Return a ZipOutputStream
+    def to_stream
       manifest, signature = build
 
       outputZip manifest, signature
@@ -88,6 +110,16 @@ module Passbook
       return Base64.decode64(data)
     end
 
+    def valid?
+      manifest = createManifest
+      begin
+        checkPass manifest
+      rescue
+        return false
+      end
+      return true
+    end
+
     private
 
     def checkPass manifest
@@ -96,13 +128,11 @@ module Passbook
       raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
 
       # Check for developer field in JSON
-      raise 'Pass Type Identifier missing' unless @pass.include?('passTypeIdentifier')
-      raise 'Team Identifier missing' unless @pass.include?('teamIdentifier')
-      raise 'Serial Number missing' unless @pass.include?('serialNumber')
-      raise 'Organization Name Identifier missing' unless @pass.include?('organizationName')
-      raise 'Format Version' unless @pass.include?('formatVersion')
+      REQUIRED_FIELDS.each do |require_field|
+        raise "#{require_field} mising" unless @pass.include?(require_field)
+      end
+      # Specific test
       raise 'Format Version should be a numeric' unless JSON.parse(@pass)['formatVersion'].is_a?(Numeric)
-      raise 'Description' unless @pass.include?('description')
     end
 
     def createManifest
