@@ -71,7 +71,8 @@ module Passbook
         key_hash[:key] = OpenSSL::PKey::RSA.new Passbook.p12_key, Passbook.p12_password
         key_hash[:cert] = OpenSSL::X509::Certificate.new Passbook.p12_certificate
       else
-        p12 = OpenSSL::PKCS12.new Passbook.p12_cert, Passbook.p12_password
+        certificate_string = OpenSSL::PKCS12.to_der(Passbook.p12_cert)
+        p12 = OpenSSL::PKCS12.new certificate_string, Passbook.p12_password
         key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
       key_hash
