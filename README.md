@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/lgleasain/passbook.png)](https://travis-ci.org/lgleasain/passbook)
+[![Build Status](https://travis-ci.org/lgleasain/passbook.svg)](https://travis-ci.org/lgleasain/passbook)
 
 # passbook
 

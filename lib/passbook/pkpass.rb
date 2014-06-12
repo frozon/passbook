@@ -1,17 +1,20 @@
 require 'digest/sha1'
 require 'openssl'
-require 'zip'
+require 'zipruby'
 require 'base64'
+require 'pry'
 
 module Passbook
   class PKPass
-    attr_accessor :pass, :manifest_files
+    attr_accessor :pass, :manifest_files, :buf
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
     def initialize pass
+      $stdout.binmode
       @pass      = pass
       @manifest_files     = []
+      @buf = StringIO.new
     end
 
     def addFile file
@@ -49,7 +52,7 @@ module Passbook
       options[:file_name] ||= 'pass.pkpass'
 
       temp_file = Tempfile.new(options[:file_name])
-      temp_file.write self.stream.string
+      temp_file.write @buf.to_s
       temp_file.close
 
       temp_file
@@ -65,10 +68,10 @@ module Passbook
     def get_p12_cert_and_key
       key_hash = {}
       if Passbook.p12_key
-        key_hash[:key] = OpenSSL::PKey::RSA.new File.read(Passbook.p12_key), Passbook.p12_password
-        key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
+        key_hash[:key] = OpenSSL::PKey::RSA.new Passbook.p12_key, Passbook.p12_password
+        key_hash[:cert] = OpenSSL::X509::Certificate.new Passbook.p12_certificate
       else
-        p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
+        p12 = OpenSSL::PKCS12.new Passbook.p12_cert, Passbook.p12_password
         key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
       key_hash
@@ -76,7 +79,7 @@ module Passbook
 
     def createSignature manifest
       p12   = get_p12_cert_and_key
-      wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
+      wwdc  = OpenSSL::X509::Certificate.new Passbook.wwdc_cert
       pk7   = OpenSSL::PKCS7.sign p12[:cert], p12[:key], manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
       data  = OpenSSL::PKCS7.write_smime pk7
 
@@ -121,25 +124,24 @@ module Passbook
     end
 
     def outputZip manifest, signature
+      buf = ''
 
-      Zip::OutputStream.write_buffer do |zip|
-        zip.put_next_entry 'pass.json'
-        zip.write @pass
-        zip.put_next_entry 'manifest.json'
-        zip.write manifest
-        zip.put_next_entry 'signature'
-        zip.write signature
+      zip = Zip::Archive.open_buffer(buf, Zip::CREATE) do |zip|
+        zip.add_buffer('pass.json', @pass)
+        zip.add_buffer('manifest.json', manifest)
+        zip.add_buffer('signature', signature)
 
         @manifest_files.each do |file|
           if file.class == Hash
-            zip.put_next_entry file[:name]
-            zip.print file[:content]
+            zip.add_buffer(file[:name], file[:content])
           else
-            zip.put_next_entry File.basename(file)
-            zip.print IO.read(file)
+            zip.add_buffer(File.basename(file), IO.read(file))
           end
         end
       end
+
+      @buf.string = buf
+      zip
     end
   end
 end
