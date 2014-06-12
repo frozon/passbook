@@ -68,10 +68,10 @@ module Passbook
     def get_p12_cert_and_key
       key_hash = {}
       if Passbook.p12_key
-        key_hash[:key] = OpenSSL::PKey::RSA.new File.read(Passbook.p12_key), Passbook.p12_password
-        key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(Passbook.p12_certificate)
+        key_hash[:key] = OpenSSL::PKey::RSA.new Passbook.p12_key, Passbook.p12_password
+        key_hash[:cert] = OpenSSL::X509::Certificate.new Passbook.p12_certificate
       else
-        p12 = OpenSSL::PKCS12.new File.read(Passbook.p12_cert), Passbook.p12_password
+        p12 = OpenSSL::PKCS12.new Passbook.p12_cert, Passbook.p12_password
         key_hash[:key], key_hash[:cert] = p12.key, p12.certificate
       end
       key_hash
@@ -79,7 +79,7 @@ module Passbook
 
     def createSignature manifest
       p12   = get_p12_cert_and_key
-      wwdc  = OpenSSL::X509::Certificate.new File.read(Passbook.wwdc_cert)
+      wwdc  = OpenSSL::X509::Certificate.new Passbook.wwdc_cert
       pk7   = OpenSSL::PKCS7.sign p12[:cert], p12[:key], manifest.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
       data  = OpenSSL::PKCS7.write_smime pk7
 
