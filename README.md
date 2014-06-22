@@ -13,6 +13,38 @@ IE:  In your Gemfile
 gem 'passbook'
 ```
 
+## Quick Start
+
+If you want to jump in without having to integrate this into your code you can use the command line options to get started.  Start by installing the gem
+
+```
+gem install passbook
+```
+
+Then go to a directory that you want to generate your pass under and use the "pk generate command".  (note:  do not use spaces in your passname or else strange things will happen.)
+
+```
+pk generate your_pass_name
+```
+
+This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your cerificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
+
+Assuming that you have put your cerificate files etc. in your working directory.
+
+```
+pk build your_pass_name -w ./wwdc.pem -c ./your_pass_name.p12 -p ''
+```
+The wwdc.pem file is the exported Apple World Wide Develoler Relations Certification Authority certifiate file from your key manager and the your_pass_name.p12 is the exported p12 file from your pass certificate.
+
+If you are not building your passes on a mac or just prefer to use the pass certificate and key pem file.
+
+```
+pk build passbook_gem_name -w ./wwdc.pem -c ./your_pass_name_certificate.pem -k your_pass_name_key.pem -p '12345'
+``` 
+
+Now you can drag the file over to a simulator or send it to your i-phone via e-mail to view your pass.
+
+
 ## Configuration
 
 Create initializer
@@ -26,7 +58,7 @@ Configure your config/initializers/passbook.rb
 ```
     Passbook.configure do |passbook|
       passbook.wwdc_cert = Rails.root.join('wwdc_cert.pem')
-      passbook.p12_cert = Rails.root.join('cert.p12')
+      passbook.p12_certificate = Rails.root.join('cert.p12')
       passbook.p12_password = 'cert password'
     end
 ```
@@ -113,7 +145,18 @@ end
 
 We will try to make this cleaner in subsequent releases.
 
-### Passbook
+### Using Different Certificates For Different Passes
+
+Sometime you might want to be able to use different certificates for different passes.  This can be done by passing in a Signer class into your PKPass initializer like so
+
+```
+  signer = Passbook::Signer.new {certificate: some_cert, password: some_password, key: some_key, wwdc_cert: some_wwdc_cert}
+  pk_pass = Passbook::PKPass.new your_json_data, signer
+
+  ....
+```
+
+### Push Notifications
 
 If you want to support passbook push notification updates you will need to configure the appropriate bits above.
 
@@ -217,7 +260,7 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
   To launch tests :
 ```
-  bundle exec rspec spec/lib/passbook/pkpass_spec.rb
+  bundle exec rake spec 
 ```
 
 ## Contributing
@@ -235,6 +278,9 @@ Allow passbook gem to return a ZipOutputStream (needed when garbage collector de
 
 ### 0.2.0
 Adding support for push notification updates for passes.
+
+### 0.4.0
+Adding support for using multiple signatures per gem configuration and introducing command line helpers.
 
 License
 -------

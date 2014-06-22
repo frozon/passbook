@@ -42,47 +42,8 @@ describe Passbook  do
   }
   }}
 
-  let (:pass) {Passbook::PKPass.new content.to_json}
-
-  context 'signatures' do
-    before do
-      Passbook.should_receive(:p12_password).and_return 'password'
-    end
-
-    context 'p12_cert_and_key' do
-      context 'pem p12 certs' do
-        before do
-          Passbook.should_receive(:p12_key).twice.and_return 'my_p12_key'
-          Passbook.should_receive(:p12_certificate).and_return 'my_p12_certificate'
-          File.should_receive(:read).with('my_p12_key').and_return 'my_p12_key_file'
-          File.should_receive(:read).with('my_p12_certificate').and_return 'my_p12_certificate_file'
-          OpenSSL::PKey::RSA.should_receive(:new).with('my_p12_key_file', 'password').and_return 'my_rsa_key'
-          OpenSSL::X509::Certificate.should_receive(:new).with('my_p12_certificate_file').and_return 'my_ssl_p12_cert'
-        end
-
-        subject {pass.get_p12_cert_and_key}
-        its([:key]) {should eq 'my_rsa_key'}
-        its([:cert]) {should eq 'my_ssl_p12_cert'}
-      end
-
-      context 'p12 files' do
-        let (:p12) { double('OpenSSL::PKCS12') }
-        let (:final_hash) {{:key => 'my_final_p12_key', :cert => 'my_final_p12_cert'}}
-        before do
-          p12.should_receive(:key).and_return final_hash[:key]
-          p12.should_receive(:certificate).and_return final_hash[:cert]
-          Passbook.should_receive(:p12_key).and_return nil
-          Passbook.should_receive(:p12_cert).and_return 'my_p12_cert'
-          File.should_receive(:read).with('my_p12_cert').and_return 'my_p12_cert_file'
-          OpenSSL::PKCS12.should_receive(:new).with('my_p12_cert_file', 'password').and_return p12
-        end
-
-        subject {pass.get_p12_cert_and_key}
-        its([:key]) {should eq final_hash[:key]}
-        its([:cert]) {should eq final_hash[:cert]}
-      end
-    end
-  end
+  let (:signer) {double 'signer'}
+  let (:pass) {Passbook::PKPass.new content.to_json, signer}
 
   context 'outputs' do
     let (:base_path) {'spec/data'}
@@ -90,7 +51,7 @@ describe Passbook  do
 
     before :each do
       pass.addFiles ["#{base_path}/icon.png","#{base_path}/icon@2x.png","#{base_path}/logo.png","#{base_path}/logo@2x.png"]
-      pass.should_receive(:createSignature).and_return('Signed by the Honey Badger')
+      signer.should_receive(:sign).and_return('Signed by the Honey Badger')
       @file_entries = []
       Zip::InputStream::open(zip_path) {|io|
         while (entry = io.get_next_entry)
