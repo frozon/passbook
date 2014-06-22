@@ -9,10 +9,10 @@ module Passbook
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
-    def initialize pass, init_signer = Passbook::Signer.new
+    def initialize pass, init_signer = nil
       @pass           = pass
       @manifest_files = []
-      @signer         = init_signer
+      @signer         = init_signer || Passbook::Signer.new
     end
 
     def addFile file
