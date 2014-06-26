@@ -7,9 +7,9 @@ module Passbook
     end
 
     def get name
-      @services = {} unless defined?(@services)
-      @services[name] = spawn(name) unless @services.include?(name)
-      @services[name]
+      @compressors = {} unless defined?(@compressors)
+      @compressors[name] = spawn(name) unless @compressors.include?(name)
+      @compressors[name]
     end
 
     private
