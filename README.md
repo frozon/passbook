@@ -27,7 +27,7 @@ Then go to a directory that you want to generate your pass under and use the "pk
 pk generate your_pass_name
 ```
 
-This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your cerificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
+This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your cerificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734)
 
 Assuming that you have put your cerificate files etc. in your working directory.
 
@@ -40,7 +40,7 @@ If you are not building your passes on a mac or just prefer to use the pass cert
 
 ```
 pk build passbook_gem_name -w ./wwdc.pem -c ./your_pass_name_certificate.pem -k your_pass_name_key.pem -p '12345'
-``` 
+```
 
 Now you can drag the file over to a simulator or send it to your i-phone via e-mail to view your pass.
 
@@ -156,6 +156,22 @@ Sometime you might want to be able to use different certificates for different p
   ....
 ```
 
+### Using Different Compressor
+
+Sometime you might want to be able to another compressor from rubyzip.
+
+For the moment, only rubyzip is supported, but feel free to add your own into `lib/passbook/compressors/` and add it to the list of available compressors into `lib/passbook/compressors.rb`
+
+In order to change the default compressor use the configuration like that
+
+```
+Passbook.configure do |passbook|
+  ...
+  passbook.compressor = :rubyzip # or wathever you want and that is implemented
+  ...
+end
+```
+
 ### Push Notifications
 
 If you want to support passbook push notification updates you will need to configure the appropriate bits above.
@@ -260,7 +276,7 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
   To launch tests :
 ```
-  bundle exec rake spec 
+  bundle exec rake spec
 ```
 
 ## Contributing
