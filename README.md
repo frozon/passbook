@@ -27,14 +27,14 @@ Then go to a directory that you want to generate your pass under and use the "pk
 pk generate your_pass_name
 ```
 
-This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your cerificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
+This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your certificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
 
-Assuming that you have put your cerificate files etc. in your working directory.
+Assuming that you have put your certificate files etc. in your working directory.
 
 ```
 pk build your_pass_name -w ./wwdc.pem -c ./your_pass_name.p12 -p ''
 ```
-The wwdc.pem file is the exported Apple World Wide Develoler Relations Certification Authority certifiate file from your key manager and the your_pass_name.p12 is the exported p12 file from your pass certificate.
+The wwdc.pem file is the exported Apple World Wide Developer Relations Certification Authority certificate file from your key manager and the your_pass_name.p12 is the exported p12 file from your pass certificate.
 
 If you are not building your passes on a mac or just prefer to use the pass certificate and key pem file.
 
@@ -42,7 +42,7 @@ If you are not building your passes on a mac or just prefer to use the pass cert
 pk build passbook_gem_name -w ./wwdc.pem -c ./your_pass_name_certificate.pem -k your_pass_name_key.pem -p '12345'
 ``` 
 
-Now you can drag the file over to a simulator or send it to your i-phone via e-mail to view your pass.
+Now you can drag the file over to a simulator or send it to your iPhone via e-mail to view your pass.
 
 
 ## Configuration
@@ -74,7 +74,7 @@ If you are running this on a different machine from what you used to create your
 ```
 If you are using Sinatra you can place this in the file you are executing or in a file that you do a require on.  You would also not reference Rails.root when specifying your file path.
 
-If You are doing push notifications then you will need to add some extra configuration options,  namely a push notification certificate and a notification gateway certificate.  Look at the Grocer gem documentation to find information on how to create this certificate.  Settings you will want ot use for the notification gateway are either 'gateway.push.apple.com' for production,  'gateway.sandbox.push.apple.com' for developmetn and 'localhost' for unit tests.
+If You are doing push notifications then you will need to add some extra configuration options,  namely a push notification certificate and a notification gateway certificate.  Look at the Grocer gem documentation to find information on how to create this certificate.  Settings you will want to use for the notification gateway are either 'gateway.push.apple.com' for production,  'gateway.sandbox.push.apple.com' for development and 'localhost' for unit tests.
 ```
     Passbook.configure do |passbook|
       .....other settings.....
@@ -162,7 +162,7 @@ If you want to support passbook push notification updates you will need to confi
 
 In order to support push notifications you will need to have a basic understanding of the way that push notifications work and how the data is passed back and forth.  See [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Creating.html) for basic information about passes and [this](http://developer.apple.com/library/ios/#Documentation/UserExperience/Conceptual/PassKit_PG/Chapters/Updating.html#//apple_ref/doc/uid/TP40012195-CH5-SW1) to understand the information that needs to be exchanged between each device and your application to support the update service.
 
-Your pass will need to have a field called 'webServiceURL' with the base url to your site and a field called 'authenticationToken'.  The json snippet should look like this.  Note that your url needs to be a valid signed https endpoint for production.  You can put your phone in dev mode to test updates against a insecure http endpoint (under settings => developer => passkit testing).
+Your pass will need to have a field called 'webServiceURL' with the base url to your site and a field called 'authenticationToken'. The json snippet should look like this.  Note that your url needs to be a valid signed https endpoint for production.  You can put your phone in dev mode to test updates against a insecure http endpoint (under settings => developer => passkit testing).
 
 ```
 ...
