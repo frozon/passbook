@@ -282,6 +282,9 @@ Adding support for push notification updates for passes.
 ### 0.4.0
 Adding support for using multiple signatures per gem configuration and introducing command line helpers.  More in [this](http://www.polyglotprogramminginc.com/allowing-for-more-signature-flexibility-in-the-ruby-passbook-gem/) blog post.
 
+### 0.4.1
+Update rubyzip dependency to >= 1.0.0
+
 License
 -------
 
