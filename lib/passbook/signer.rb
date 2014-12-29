@@ -5,7 +5,7 @@ module Passbook
   class Signer
     attr_accessor :certificate, :password, :key, :wwdc_cert, :key_hash, :p12_cert
 
-    def initialize params = {}
+    def initialize(params = {})
       @certificate = params[:certificate] || Passbook.p12_certificate
       @password    = params[:password] || Passbook.p12_password
       @key         = params[:key] || (params.empty? ? Passbook.p12_key : nil)
@@ -13,17 +13,17 @@ module Passbook
       compute_cert
     end
 
-    def sign data
+    def sign(data)
       wwdc  = OpenSSL::X509::Certificate.new File.read(wwdc_cert)
       pk7   = OpenSSL::PKCS7.sign key_hash[:cert], key_hash[:key], data.to_s, [wwdc], OpenSSL::PKCS7::BINARY | OpenSSL::PKCS7::DETACHED
       data  = OpenSSL::PKCS7.write_smime pk7
 
       str_debut = "filename=\"smime.p7s\"\n\n"
-      data = data[data.index(str_debut)+str_debut.length..data.length-1]
-      str_end = "\n\n------"
-      data = data[0..data.index(str_end)-1]
+      data      = data[data.index(str_debut)+str_debut.length..data.length-1]
+      str_end   = "\n\n------"
+      data      = data[0..data.index(str_end)-1]
 
-      return Base64.decode64(data)
+      Base64.decode64(data)
     end
 
     def compute_cert

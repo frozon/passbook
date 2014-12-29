@@ -9,22 +9,22 @@ module Passbook
 
     TYPES = ['boarding-pass', 'coupon', 'event-ticket', 'store-card', 'generic']
 
-    def initialize pass, init_signer = nil
+    def initialize(pass, init_signer = nil)
       @pass           = pass
       @manifest_files = []
       @signer         = init_signer || Passbook::Signer.new
     end
 
-    def addFile file
+    def addFile(file)
       @manifest_files << file
     end
 
-    def addFiles files
+    def addFiles(files)
       @manifest_files += files
     end
 
     # for backwards compatibility
-    def json= json
+    def json=(json)
       @pass = json
     end
 
@@ -37,7 +37,7 @@ module Passbook
       # Create pass signature
       signature = @signer.sign manifest
 
-      return [manifest, signature]
+      [manifest, signature]
     end
 
     # Backward compatibility
@@ -65,7 +65,7 @@ module Passbook
 
     private
 
-    def checkPass manifest
+    def checkPass(manifest)
       # Check for default images
       raise 'Icon missing' unless manifest.include?('icon.png')
       raise 'Icon@2x missing' unless manifest.include?('icon@2x.png')
@@ -92,10 +92,10 @@ module Passbook
         end
       end
 
-      return sha1s.to_json
+      sha1s.to_json
     end
 
-    def outputZip manifest, signature
+    def outputZip(manifest, signature)
 
       Zip::OutputStream.write_buffer do |zip|
         zip.put_next_entry 'pass.json'
