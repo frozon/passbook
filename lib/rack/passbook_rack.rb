@@ -9,6 +9,7 @@ module Rack
     def call(env)
       @parameters['authToken'] = env['HTTP_AUTHORIZATION'].gsub(/ApplePass /,'') if env['HTTP_AUTHORIZATION']
       @parameters.merge!(Rack::Utils.parse_nested_query(env['QUERY_STRING']))
+      @parameters['ifModifiedSince'] = env['HTTP_IF_MODIFIED_SINCE'] if env['HTTP_IF_MODIFIED_SINCE']
       method_and_params = find_method env['PATH_INFO']
       if method_and_params
         case method_and_params[:method]
@@ -25,12 +26,12 @@ module Rack
           [response ? 200 : 204, {}, [response.to_json]]
         when 'latest_pass'
           response = Passbook::PassbookNotification.latest_pass(method_and_params[:params])
-          if response
-            [200, {'Content-Type' => 'application/vnd.apple.pkpass', 
-              'Content-Disposition' => 'attachment', 
-              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass"}, [response]]
+          if response[:status] == 200
+            [200, {'Content-Type' => 'application/vnd.apple.pkpass',
+              'Content-Disposition' => 'attachment',
+              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass","last-modified" => response[:last_modified]}, [response[:latest_pass]]]
           else
-            [204, {}, {}]
+            [response[:status], {}, {}]
           end
         when 'log'
           Passbook::PassbookNotification.passbook_log JSON.parse(env['rack.input'].read 10000)

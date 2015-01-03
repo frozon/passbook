@@ -143,8 +143,8 @@ describe Rack::PassbookRack  do
     end
 
     context 'get latest pass' do
-      context 'valid pass' do
-        let(:raw_pass) {'some url encoded text'}
+      context 'valid pass updated after if modified since' do
+        let(:raw_pass) {{:status => 200, :latest_pass => 'some url encoded text', :last_modified => '13713445412'}}
 
         before do
           Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
@@ -154,15 +154,25 @@ describe Rack::PassbookRack  do
 
         subject {last_response}
         its(:status) {should eq 200}
-        its(:header) {should eq({'Content-Type' => 'application/vnd.apple.pkpass', 
-          'Content-Disposition' => 'attachment', 'filename' => '27-1.pkpass', 'Content-Length' => '21'})}
-        its(:body) {should eq raw_pass}
+        its(:header) {should eq({'Content-Type' => 'application/vnd.apple.pkpass',
+          'Content-Disposition' => 'attachment', 'filename' => '27-1.pkpass', 'last-modified' => '13713445412', 'Content-Length' => '21'})}
+        its(:body) {should eq raw_pass[:latest_pass]}
+      end
+
+      context 'pass not updated after if modified since' do
+        before do
+          Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params.merge!('ifModifiedSince' => '1371189712')).
+              and_return({:status => 304})
+          get latest_pass_path, {}, rack_env = {'HTTP_IF_MODIFIED_SINCE' => '1371189712'}
+        end
+        subject {last_response}
+        its(:status) {should eq 304}
       end
 
       context 'no pass' do
         before do
           Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
-            and_return(nil)
+            and_return({:status => 204, :latest_pass => nil})
           get latest_pass_path
         end
 
