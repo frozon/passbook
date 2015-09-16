@@ -27,7 +27,7 @@ Then go to a directory that you want to generate your pass under and use the "pk
 pk generate your_pass_name
 ```
 
-This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your certificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
+This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your certificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734)
 
 Assuming that you have put your certificate files etc. in your working directory.
 
@@ -40,7 +40,7 @@ If you are not building your passes on a mac or just prefer to use the pass cert
 
 ```
 pk build passbook_gem_name -w ./wwdc.pem -c ./your_pass_name_certificate.pem -k your_pass_name_key.pem -p '12345'
-``` 
+```
 
 Now you can drag the file over to a simulator or send it to your iPhone via e-mail to view your pass.
 
@@ -79,6 +79,7 @@ If You are doing push notifications then you will need to add some extra configu
     Passbook.configure do |passbook|
       .....other settings.....
       passbook.notification_gateway = 'gateway.push.apple.com'
+      passbook.notification_passphrase = 'my_hard_password' (optional)
       passbook.notification_cert = 'lib/assets/my_notification_cert.pem'
     end
 ```
@@ -260,7 +261,7 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
   To launch tests :
 ```
-  bundle exec rake spec 
+  bundle exec rake spec
 ```
 
 ## Contributing
