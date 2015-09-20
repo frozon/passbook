@@ -233,7 +233,7 @@ module Passbook
       # you will want to return
       my_pass = PkPass.new 'your pass json'
       # you will want to return the string from the stream of your PkPass object.
-      mypass.stream.string
+      {:status => 200, :latest_pass => mypass.stream.string, :last_modified => '1442120893'}
     end
 
     # This is called whenever there is something from the update process that is a warning
@@ -248,10 +248,10 @@ end
 
 ```
 
-To send a push notification for a updated pass simply call Passbook::PassbookPushNotification.send_notifications_for_promotion with the push token for the pass you are updating
+To send a push notification for a updated pass simply call Passbook::PushNotification.send_notification with the push token for the device you are updating
 
 ```
-  Passbook::PassbookPushNotification.send_notifications_for_promotion the_pass_push_token
+  Passbook::PushNotification.send_notification the_device_push_token
 
 ```
 
