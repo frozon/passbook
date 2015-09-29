@@ -27,7 +27,7 @@ Then go to a directory that you want to generate your pass under and use the "pk
 pk generate your_pass_name
 ```
 
-This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your certificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734) 
+This will generate a directory called your_pass_name.  Edit your pass.json file in the your_pass_directory to have a valid team identifier and passTypeIdentifier and create your certificates if you haven't yet. [See this article for information on how to do this.](http://www.raywenderlich.com/20734/beginning-passbook-part-1#more-20734)
 
 Assuming that you have put your certificate files etc. in your working directory.
 
@@ -40,7 +40,7 @@ If you are not building your passes on a mac or just prefer to use the pass cert
 
 ```
 pk build passbook_gem_name -w ./wwdc.pem -c ./your_pass_name_certificate.pem -k your_pass_name_key.pem -p '12345'
-``` 
+```
 
 Now you can drag the file over to a simulator or send it to your iPhone via e-mail to view your pass.
 
@@ -79,6 +79,7 @@ If You are doing push notifications then you will need to add some extra configu
     Passbook.configure do |passbook|
       .....other settings.....
       passbook.notification_gateway = 'gateway.push.apple.com'
+      passbook.notification_passphrase = 'my_hard_password' (optional)
       passbook.notification_cert = 'lib/assets/my_notification_cert.pem'
     end
 ```
@@ -232,7 +233,7 @@ module Passbook
       # you will want to return
       my_pass = PkPass.new 'your pass json'
       # you will want to return the string from the stream of your PkPass object.
-      mypass.stream.string
+      {:status => 200, :latest_pass => mypass.stream.string, :last_modified => '1442120893'}
     end
 
     # This is called whenever there is something from the update process that is a warning
@@ -247,10 +248,10 @@ end
 
 ```
 
-To send a push notification for a updated pass simply call Passbook::PassbookPushNotification.send_notifications_for_promotion with the push token for the pass you are updating
+To send a push notification for a updated pass simply call Passbook::PushNotification.send_notification with the push token for the device you are updating
 
 ```
-  Passbook::PassbookPushNotification.send_notifications_for_promotion the_pass_push_token
+  Passbook::PushNotification.send_notification the_device_push_token
 
 ```
 
@@ -260,7 +261,7 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
   To launch tests :
 ```
-  bundle exec rake spec 
+  bundle exec rake spec
 ```
 
 ## Contributing

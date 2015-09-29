@@ -48,7 +48,7 @@ describe Rack::PassbookRack  do
         its([:params]) {should eq(register_delete_params) }
       end
 
-      it_behaves_like 'a method that can handle non passbook urls' 
+      it_behaves_like 'a method that can handle non passbook urls'
 
     end
 
@@ -144,7 +144,7 @@ describe Rack::PassbookRack  do
 
     context 'get latest pass' do
       context 'valid pass' do
-        let(:raw_pass) {'some url encoded text'}
+        let(:raw_pass) {{:status => 200, :latest_pass => 'some url encoded text', :last_modified => '1442401010'}}
 
         before do
           Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
@@ -154,15 +154,15 @@ describe Rack::PassbookRack  do
 
         subject {last_response}
         its(:status) {should eq 200}
-        its(:header) {should eq({'Content-Type' => 'application/vnd.apple.pkpass', 
-          'Content-Disposition' => 'attachment', 'filename' => '27-1.pkpass', 'Content-Length' => '21'})}
-        its(:body) {should eq raw_pass}
+        its(:header) {should eq({'Content-Type' => 'application/vnd.apple.pkpass',
+          'Content-Disposition' => 'attachment', 'filename' => '27-1.pkpass', 'last-modified' => '1442401010', 'Content-Length' => '21'})}
+        its(:body) {should eq raw_pass[:latest_pass]}
       end
 
       context 'no pass' do
         before do
           Passbook::PassbookNotification.should_receive(:latest_pass).with(latest_pass_params).
-            and_return(nil)
+            and_return({:status => 204, :latest_pass => nil})
           get latest_pass_path
         end
 
@@ -213,7 +213,7 @@ describe Rack::PassbookRack  do
       subject {last_response}
       its(:status) {should eq 200}
       its(:body) {should eq 'test app'}
-    end    
+    end
   end
 
 end
@@ -224,7 +224,7 @@ include Rack::Test::Methods
 def app
   test_app = lambda do |env|
     [200, {}, 'test app']
-  end 
+  end
 
   Rack::PassbookRack.new test_app
 end

@@ -15,7 +15,7 @@ module Rack
         when 'device_register_delete'
           if env['REQUEST_METHOD'] == 'POST'
             [Passbook::PassbookNotification.
-              register_pass(method_and_params[:params].merge! JSON.parse(env['rack.input'].read 1000))[:status], 
+              register_pass(method_and_params[:params].merge! JSON.parse(env['rack.input'].read 1000))[:status],
               {}, ['']]
           elsif env['REQUEST_METHOD'] == 'DELETE'
             [Passbook::PassbookNotification.unregister_pass(method_and_params[:params])[:status], {}, {}]
@@ -25,12 +25,12 @@ module Rack
           [response ? 200 : 204, {}, [response.to_json]]
         when 'latest_pass'
           response = Passbook::PassbookNotification.latest_pass(method_and_params[:params])
-          if response
-            [200, {'Content-Type' => 'application/vnd.apple.pkpass', 
-              'Content-Disposition' => 'attachment', 
-              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass"}, [response]]
+          if response[:status] == 200
+            [200, {'Content-Type' => 'application/vnd.apple.pkpass',
+              'Content-Disposition' => 'attachment',
+              'filename' => "#{method_and_params[:params]['serialNumber']}.pkpass","last-modified" => response[:last_modified]}, [response[:latest_pass]]]
           else
-            [204, {}, {}]
+            [response[:status], {}, {}]
           end
         when 'log'
           Passbook::PassbookNotification.passbook_log JSON.parse(env['rack.input'].read 10000)
@@ -69,10 +69,10 @@ module Rack
         end
       end
 
-      return nil       
+      return nil
     end
 
-    private 
+    private
 
     def method_and_params_hash(method, path)
       parsed_path = path.split '/'
