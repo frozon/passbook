@@ -3,7 +3,7 @@ require "passbook/pkpass"
 require "passbook/signer"
 require 'active_support/core_ext/module/attribute_accessors'
 require 'passbook/push_notification'
-require 'grocer/passbook_notification'
+require 'grocer'
 require 'rack/passbook_rack'
 
 module Passbook
