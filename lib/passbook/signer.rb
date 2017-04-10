@@ -32,9 +32,13 @@ module Passbook
         @key_hash[:key]  = OpenSSL::PKey::RSA.new File.read(key), password
         @key_hash[:cert] = OpenSSL::X509::Certificate.new File.read(certificate)
       else
-        p12 = OpenSSL::PKCS12.new File.read(certificate), password
+        p12 = OpenSSL::PKCS12.new certificate_data, password
         @key_hash[:key], @key_hash[:cert] = p12.key, p12.certificate
       end
+    end
+
+    def certificate_data
+      certificate.is_a?(Pathname) ? File.read(certificate) : certificate
     end
   end
 end
