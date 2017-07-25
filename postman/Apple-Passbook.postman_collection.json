@@ -1,0 +1,419 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Apple Passbook",
+		"_postman_id": "c7e1a2cb-1f6a-ba6a-025f-3582775bf834",
+		"description": "Apple passbook controllers and tests for push notification handlers.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Registers device sccuessfully",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 201 or 200\"] = responseCode.code === (201 || 200);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here/1cd14aba-e97a-40d3-adfc-04511c9ccec2",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "ApplePass 1ad4584de5c287564e06a378cfc53a4c",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pushToken",
+							"value": "pushToken01",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's registration call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Cannot register device -- Pass not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 404\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here/incorrect-pass-sn",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "ApplePass 1ad4584de5c287564e06a378cfc53a4c",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pushToken",
+							"value": "pushToken01",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's registration call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Cannot register device -- Incorrect auth token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 401\"] = responseCode.code === 401;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here/1cd14aba-e97a-40d3-adfc-04511c9ccec2",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "ApplePass Incorrect!",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pushToken",
+							"value": "pushToken01",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's registration call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Obtain passes for device",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is application/json\"] = postman.getResponseHeader(\"Content-Type\").includes('application/json');",
+							"",
+							"tests[\"Body contains pass serial num\"] = responseBody.has(\"1cd14aba-e97a-40d3-adfc-04511c9ccec2\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here",
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's investigation call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Can't find passes -- device not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 404\"] = responseCode.code === 404;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/INVALIDDEVICE/registrations/your.pass.name.here",
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's investigation call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "No passes for device -- end of time timestamp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 204\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": {
+					"raw": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here?passesUpdatedSince=2147483647",
+					"host": [
+						"http://localhost:3000"
+					],
+					"path": [
+						"v1",
+						"devices",
+						"MYDEVICE01",
+						"registrations",
+						"your.pass.name.here"
+					],
+					"query": [
+						{
+							"key": "passesUpdatedSince",
+							"value": "2147483647",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's investigation call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Get latest version of pass",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Content-Type is equal to application/vnd.apple.pkpass\"] = postman.getResponseHeader(\"Content-Type\") === 'application/vnd.apple.pkpass';"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/passes/your.pass.name.here/1cd14aba-e97a-40d3-adfc-04511c9ccec2",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "ApplePass 1ad4584de5c287564e06a378cfc53a4c",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's updated pass retrieval call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Can't get latest version of pass -- auth header not present",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 401\"] = responseCode.code === 401;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/passes/your.pass.name.here/1cd14aba-e97a-40d3-adfc-04511c9ccec2",
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"description": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's updated pass retrieval call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Unregister a device",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 201 or 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/devices/MYDEVICE01/registrations/your.pass.name.here/1cd14aba-e97a-40d3-adfc-04511c9ccec2",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "ApplePass 1ad4584de5c287564e06a378cfc53a4c",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's registration call to our service."
+			},
+			"response": []
+		},
+		{
+			"name": "Log errors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 201 or 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "http://localhost:3000/v1/log",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"logs\": [\n\t\t\"Error 1: this is generated by postman tests\",\n\t\t\"Error 2: this is generated by postman tests\"\n\t]\n}"
+				},
+				"description": "https://developer.apple.com/library/content/documentation/PassKit/Reference/PassKit_WebService/WebService.html\n# Handles Apple's registration call to our service."
+			},
+			"response": []
+		}
+	]
+}
