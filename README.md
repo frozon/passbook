@@ -259,10 +259,12 @@ Apple will send out a notification to your phone (usually within 15 minutes or l
 
 ## Tests
 
-  To launch tests :
+  To launch unit tests :
 ```
   bundle exec rake spec
 ```
+  To launch postman functional tests :
+  After adding postman collection to your postman client, change the 'your.pass.name.here' in the urls to the proper name of your pass.
 
 ## Contributing
 
