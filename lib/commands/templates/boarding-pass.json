@@ -7,6 +7,13 @@
     "serialNumber" : "123456",
     "foregroundColor": "#866B23",
     "backgroundColor": "#FFD248",
+    "barcodes" : [
+        {
+            "message" : "DL123",
+            "format" : "PKBarcodeFormatQR",
+            "messageEncoding" : "iso-8859-1"
+        }
+    ],
     "boardingPass" : {
         "primaryFields" : [
             {
@@ -40,11 +47,6 @@
             }
         ],
         "transitType" : "PKTransitTypeAir",
-        "barcode" : {
-            "message" : "DL123",
-            "format" : "PKBarcodeFormatQR",
-            "messageEncoding" : "iso-8859-1"
-        },
         "backFields" : [
             {
                 "key" : "terms",
