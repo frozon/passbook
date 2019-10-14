@@ -73,7 +73,7 @@ GEM
     terminal-table (1.4.5)
     thread_safe (0.3.4)
     thread_safe (0.3.4-java)
-    yard (0.8.7.2)
+    yard (0.9.20)
 
 PLATFORMS
   java
