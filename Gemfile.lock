@@ -1,13 +1,17 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.14)
-      i18n (~> 0.6, >= 0.6.4)
-      multi_json (~> 1.0)
+    activesupport (4.1.11)
+      i18n (~> 0.6, >= 0.6.9)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.1)
+      tzinfo (~> 1.1)
     addressable (2.3.6)
     builder (3.2.2)
     commander (4.1.5)
       highline (~> 1.6.11)
+    concurrent-ruby (1.1.5)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.4)
@@ -25,7 +29,8 @@ GEM
     grocer (0.4.1)
     hashie (3.3.2)
     highline (1.6.19)
-    i18n (0.6.5)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     jeweler (2.0.1)
       builder
       bundler (>= 1.0)
@@ -39,7 +44,8 @@ GEM
     json (1.8.1-java)
     jwt (1.2.0)
     mini_portile (0.6.1)
-    multi_json (1.8.0)
+    minitest (5.12.2)
+    multi_json (1.14.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nokogiri (1.6.5)
@@ -73,6 +79,8 @@ GEM
     terminal-table (1.4.5)
     thread_safe (0.3.4)
     thread_safe (0.3.4-java)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
     yard (0.8.7.2)
 
 PLATFORMS
