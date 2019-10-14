@@ -8,6 +8,7 @@ GEM
     builder (3.2.2)
     commander (4.1.5)
       highline (~> 1.6.11)
+    concurrent-ruby (1.1.5)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.4)
@@ -25,7 +26,8 @@ GEM
     grocer (0.4.1)
     hashie (3.3.2)
     highline (1.6.19)
-    i18n (0.6.5)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     jeweler (2.0.1)
       builder
       bundler (>= 1.0)
