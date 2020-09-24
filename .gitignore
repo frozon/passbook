@@ -4,3 +4,4 @@ coverage
 pkg
 *.gem
 .bundle
+.idea/

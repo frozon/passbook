@@ -48,8 +48,8 @@ module Passbook
     # Return a Tempfile containing our ZipStream
     def file(options = {})
       options[:file_name] ||= 'pass.pkpass'
-
       temp_file = Tempfile.new(options[:file_name])
+      temp_file.binmode
       temp_file.write self.stream.string
       temp_file.close
 
