@@ -35,8 +35,6 @@ GEM
       nokogiri (>= 1.5.10)
       rake
       rdoc
-    json (1.8.1)
-    json (1.8.1-java)
     jwt (1.2.0)
     mini_portile (0.6.1)
     multi_json (1.8.0)
@@ -55,8 +53,7 @@ GEM
     rack-test (0.6.2)
       rack (>= 1.0)
     rake (10.1.0)
-    rdoc (4.2.0)
-      json (~> 1.4)
+    rdoc (6.3.2)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
